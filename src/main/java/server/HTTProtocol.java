@@ -3,6 +3,7 @@ package server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import static server.StatusCodes.*;
 
 public class HTTProtocol implements Runnable {
     private Client client;
@@ -18,7 +19,7 @@ public class HTTProtocol implements Runnable {
     public void run() {
         try {
             while(in.readLine() != null) {
-                out.print("HTTP/1.1 404 Not Found\r\n");
+                out.print(NOT_FOUND);
                 out.flush();
                 client.closeSocket();
             }
