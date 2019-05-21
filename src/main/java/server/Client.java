@@ -25,4 +25,12 @@ public class Client {
     public PrintWriter getOutputStreamWriter() {
         return outputStreamWriter;
     }
+
+    public void closeSocket() {
+        try {
+            socket.close();
+        } catch(IOException e) {
+            System.err.println(e);
+        }
+    }
 }
