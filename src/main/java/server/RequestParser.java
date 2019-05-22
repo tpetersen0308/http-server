@@ -8,8 +8,7 @@ public class RequestParser {
     public HashMap parse(BufferedReader in) {
         HashMap parsedRequest = new HashMap();
         try {
-            String requestLine = in.readLine();
-            parsedRequest.put("requestLine", requestLine);
+            parsedRequest.put("requestLine", parseRequestLine(in));
 
             HashMap<String, String> requestHeaders = new HashMap<>();
             String header = in.readLine();
@@ -42,5 +41,15 @@ public class RequestParser {
             System.err.println(e);
         }
         return parsedRequest;
+    }
+
+    public String parseRequestLine(BufferedReader in) {
+        String requestLine = null;
+        try {
+             requestLine = in.readLine();
+        } catch(IOException err) {
+            System.err.println(err);
+        }
+        return requestLine;
     }
 }
