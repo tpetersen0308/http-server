@@ -33,8 +33,8 @@ public class RequestParserTest {
 
         SocketStub socket = new SocketStub(request);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        RequestParser parser = new RequestParser(in);
+        RequestParser parser = new RequestParser();
 
-        assertEquals(expectedResult, parser.parse());
+        assertEquals(expectedResult, parser.parse(in));
     }
 }

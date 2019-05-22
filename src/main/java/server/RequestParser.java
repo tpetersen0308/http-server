@@ -5,13 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class RequestParser {
-    private BufferedReader in;
-
-    public RequestParser(BufferedReader in) {
-        this.in = in;
-    }
-
-    public HashMap parse() {
+    public HashMap parse(BufferedReader in) {
         HashMap parsedRequest = new HashMap();
         try {
             String requestLine = in.readLine();
