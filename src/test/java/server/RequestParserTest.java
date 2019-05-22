@@ -8,6 +8,7 @@ import static org.junit.Assert.assertEquals;
 import server.stubs.SocketStub;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
@@ -18,6 +19,7 @@ public class RequestParserTest {
     SocketStub socket;
     BufferedReader in;
     RequestParser parser;
+    HashMap expectedHeaders;
 
     @Before
     public void stubRequest() {
@@ -25,6 +27,15 @@ public class RequestParserTest {
         String requestHeaders = "User-Agent: Ruby\n" + "Connection: close\n" + "Host: 127.0.0.1:5000\n" + "Content-Length: 46";
         requestBody = "lorem ipsum dolor sit amet, adipiscing elit...";
         request = requestLine + "\r\n" + requestHeaders + "\n\n" + requestBody;
+    }
+
+    @Before
+    public void stubHeaders() {
+        expectedHeaders = new HashMap<String, String>();
+        expectedHeaders.put("User-Agent", "Ruby");
+        expectedHeaders.put("Connection", "close");
+        expectedHeaders.put("Host", "127.0.0.1:5000");
+        expectedHeaders.put("Content-Length", "46");
     }
 
     @Before
@@ -40,22 +51,23 @@ public class RequestParserTest {
 
     @Test
     public void shouldReturnEntireParsedRequest() {
-        HashMap headersMap = new HashMap<String, String>();
-        headersMap.put("User-Agent", "Ruby");
-        headersMap.put("Connection", "close");
-        headersMap.put("Host", "127.0.0.1:5000");
-        headersMap.put("Content-Length", "46");
-
         HashMap expectedResult = new HashMap<>();
         expectedResult.put("requestLine", requestLine);
-        expectedResult.put("requestHeaders", headersMap);
+        expectedResult.put("requestHeaders", expectedHeaders);
         expectedResult.put("requestBody", requestBody);
 
         assertEquals(expectedResult, parser.parse(in));
     }
 
     @Test
-    public void shouldParseRequestLine() {
+    public void shouldParseRequestLineFromInputStream() {
         assertEquals("GET /redirect HTTP/1.1", parser.parseRequestLine(in));
+    }
+
+    @Test
+    public void shouldParseHeadersFromInputStream() throws IOException {
+        in.readLine();
+
+        assertEquals(expectedHeaders, parser.parseRequestHeaders(in));
     }
 }
