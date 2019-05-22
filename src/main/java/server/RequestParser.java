@@ -47,12 +47,10 @@ public class RequestParser {
         HashMap<String, String> requestHeaders = new HashMap<>();
         try {
             String header = in.readLine();
-            if(header != null) {
-                while(!header.isEmpty()) {
-                    String[] headerComponents = header.split(": ");
-                    requestHeaders.put(headerComponents[0].trim(), headerComponents[1].trim());
-                    header = in.readLine();
-                }
+            while(header != null && !header.isEmpty()) {
+                String[] headerComponents = header.split(": ");
+                requestHeaders.put(headerComponents[0].trim(), headerComponents[1].trim());
+                header = in.readLine();
             }
         } catch(IOException err) {
             System.err.println(err);
