@@ -1,8 +1,9 @@
 package server;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+
 import static server.StatusCodes.*;
 
 public class HTTProtocol implements Runnable {
@@ -17,14 +18,16 @@ public class HTTProtocol implements Runnable {
     }
 
     public void run() {
-        try {
-            while(in.readLine() != null) {
+            RequestParser parser = new RequestParser(in);
+            HashMap parsedRequest = parser.parse();
+            String requestLine = (String)parsedRequest.get("requestLine");
+
+            if(requestLine.contains("/simple_get")){
+                out.print(OK);
+            } else {
                 out.print(NOT_FOUND);
-                out.flush();
-                client.closeSocket();
             }
-        } catch(IOException e) {
-            System.err.println(e);
-        }
+            out.flush();
+            client.closeSocket();
     }
 }
