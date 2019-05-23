@@ -1,7 +1,5 @@
 package server;
 
-import java.util.HashMap;
-
 public class Routes {
     private Routes() {};
 

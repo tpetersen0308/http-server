@@ -3,7 +3,6 @@ package server;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import static server.StatusCodes.OK;
 import static server.StatusCodes.NOT_FOUND;
@@ -22,8 +21,7 @@ public class HTTProtocol implements Runnable {
 
     public void run() {
         RequestParser parser = new RequestParser(in);
-        HashMap parsedRequest = parser.parse();
-        Request request = new Request(parsedRequest);
+        Request request = new Request(parser.parse());
         String responseStatus = getResponseStatus(request);
 
         out.print(responseStatus);
