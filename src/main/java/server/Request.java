@@ -10,7 +10,7 @@ public class Request {
     }
 
     public String getPath() {
-        String requestLine = (String)parsedRequest.get("requestLine");
+        String requestLine = (String) parsedRequest.get("requestLine");
         String requestPath = requestLine.split(" ")[1].trim();
         return requestPath;
     }

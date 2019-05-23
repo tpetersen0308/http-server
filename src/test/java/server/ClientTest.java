@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import server.stubs.SocketStub;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
@@ -16,7 +17,7 @@ public class ClientTest {
     @Before
     public void setupClient() throws IOException {
         socket = new SocketStub("echo");
-        client=new Client(socket);
+        client = new Client(socket);
     }
 
     @Test

@@ -13,7 +13,7 @@ public class Server {
 
     public void start() throws IOException {
         ServerSocket socket = new ServerSocket(port);
-        while(true) {
+        while (true) {
             Socket clientSocket = socket.accept();
             Client client = new Client(clientSocket);
             HTTProtocol protocol = new HTTProtocol(client);

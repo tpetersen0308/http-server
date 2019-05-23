@@ -28,8 +28,8 @@ public class RequestParser {
     private String parseRequestLine() {
         String requestLine = null;
         try {
-             requestLine = in.readLine();
-        } catch(IOException err) {
+            requestLine = in.readLine();
+        } catch (IOException err) {
             System.err.println(err);
         }
         return requestLine;
@@ -39,12 +39,12 @@ public class RequestParser {
         HashMap<String, String> requestHeaders = new HashMap<>();
         try {
             String header = in.readLine();
-            while(header != null && !header.isEmpty()) {
+            while (header != null && !header.isEmpty()) {
                 String[] headerComponents = header.split(": ");
                 requestHeaders.put(headerComponents[0].trim(), headerComponents[1].trim());
                 header = in.readLine();
             }
-        } catch(IOException err) {
+        } catch (IOException err) {
             System.err.println(err);
         }
         return requestHeaders;
@@ -54,9 +54,9 @@ public class RequestParser {
         StringBuilder requestBody = new StringBuilder();
         int nextBodyChar;
         try {
-            for(int i = 0; i < contentLength; i++) {
+            for (int i = 0; i < contentLength; i++) {
                 nextBodyChar = in.read();
-                requestBody.append((char)nextBodyChar);
+                requestBody.append((char) nextBodyChar);
             }
         } catch (IOException err) {
             System.err.println(err);

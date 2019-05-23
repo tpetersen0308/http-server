@@ -29,7 +29,7 @@ public class Client {
     public void closeSocket() {
         try {
             socket.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.err.println(e);
         }
     }

@@ -30,7 +30,7 @@ public class HTTProtocol implements Runnable {
     }
 
     private String getResponseStatus(Request request) {
-        if(Arrays.asList(ROUTES).contains(request.getPath())){
+        if (Arrays.asList(ROUTES).contains(request.getPath())) {
             return OK;
         } else {
             return NOT_FOUND;
