@@ -15,7 +15,7 @@ public class HTTProtocolTest {
         Client client = new Client(socket);
         HTTProtocol protocol = new HTTProtocol(client);
         protocol.run();
-        assertEquals("HTTP/1.1 404 Not Found\r\n", socket.getOutputStream().toString());
+        assertEquals("HTTP/1.1 404 Not Found\r\n\r\n", socket.getOutputStream().toString());
     }
 
     @Test
@@ -24,7 +24,7 @@ public class HTTProtocolTest {
         Client client = new Client(socket);
         HTTProtocol protocol = new HTTProtocol(client);
         protocol.run();
-        assertEquals("HTTP/1.1 200 OK\r\n", socket.getOutputStream().toString());
+        assertEquals("HTTP/1.1 200 OK\r\n\r\n", socket.getOutputStream().toString());
     }
 
     @Test
@@ -33,6 +33,6 @@ public class HTTProtocolTest {
         Client client = new Client(socket);
         HTTProtocol protocol = new HTTProtocol(client);
         protocol.run();
-        assertEquals("HTTP/1.1 200 OK\r\n", socket.getOutputStream().toString());
+        assertEquals("HTTP/1.1 200 OK\r\n\r\n", socket.getOutputStream().toString());
     }
 }
