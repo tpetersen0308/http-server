@@ -8,7 +8,6 @@ import static org.junit.Assert.assertEquals;
 import server.stubs.SocketStub;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
@@ -57,25 +56,5 @@ public class RequestParserTest {
         expectedResult.put("requestBody", requestBody);
 
         assertEquals(expectedResult, parser.parse(in));
-    }
-
-    @Test
-    public void shouldParseRequestLineFromInputStream() {
-        assertEquals("GET /redirect HTTP/1.1", parser.parseRequestLine(in));
-    }
-
-    @Test
-    public void shouldParseHeadersFromInputStream() throws IOException {
-        parser.parseRequestLine(in);
-
-        assertEquals(expectedHeaders, parser.parseRequestHeaders(in));
-    }
-
-    @Test
-    public void shouldParseBodyFromInputStream() {
-        parser.parseRequestLine(in);
-        parser.parseRequestHeaders(in);
-
-        assertEquals(requestBody, parser.parseRequestBody(in, requestBody.length()));
     }
 }
