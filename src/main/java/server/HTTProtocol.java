@@ -23,10 +23,9 @@ public class HTTProtocol implements Runnable {
     public void run() {
         RequestParser parser = new RequestParser();
         HashMap parsedRequest = parser.parse(in);
-        String requestLine = (String)parsedRequest.get("requestLine");
-        String requestPath = requestLine.split(" ")[1].trim();
+        Request request = new Request(parsedRequest);
 
-        if(Arrays.asList(ROUTES).contains(requestPath)){
+        if(Arrays.asList(ROUTES).contains(request.getPath())){
             out.print(OK);
         } else {
             out.print(NOT_FOUND);
