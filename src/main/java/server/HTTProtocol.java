@@ -23,7 +23,7 @@ public class HTTProtocol implements Runnable {
         HashMap parsedRequest = parser.parse(in);
         String requestLine = (String)parsedRequest.get("requestLine");
 
-        if(requestLine.contains("/simple_get")){
+        if(requestLine.contains("/simple_get") || requestLine.contains("/get_with_body")){
             out.print(OK);
         } else {
             out.print(NOT_FOUND);
