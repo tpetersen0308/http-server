@@ -43,18 +43,16 @@ public class RequestParserTest {
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 
-    @Before
-    public void setupParser() {
-        parser = new RequestParser();
-    }
-
     @Test
     public void shouldReturnEntireParsedRequest() {
         HashMap expectedResult = new HashMap<>();
         expectedResult.put("requestLine", requestLine);
         expectedResult.put("requestHeaders", expectedHeaders);
         expectedResult.put("requestBody", requestBody);
+        RequestParser parser = new RequestParser(in);
 
-        assertEquals(expectedResult, parser.parse(in));
+        HashMap parsedRequest = parser.parse();
+
+        assertEquals(expectedResult, parsedRequest);
     }
 }

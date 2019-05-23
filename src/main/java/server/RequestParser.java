@@ -5,21 +5,27 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class RequestParser {
-    public HashMap parse(BufferedReader in) {
+    private BufferedReader in;
+
+    public RequestParser(BufferedReader in) {
+        this.in = in;
+    }
+
+    public HashMap parse() {
         HashMap parsedRequest = new HashMap();
 
-        parsedRequest.put("requestLine", parseRequestLine(in));
+        parsedRequest.put("requestLine", parseRequestLine());
 
-        HashMap<String, String> requestHeaders = parseRequestHeaders(in);
+        HashMap<String, String> requestHeaders = parseRequestHeaders();
         parsedRequest.put("requestHeaders", requestHeaders);
 
         Integer contentLength = parseRequestBodyContentLength(requestHeaders);
-        parsedRequest.put("requestBody", parseRequestBody(in, contentLength));
+        parsedRequest.put("requestBody", parseRequestBody(contentLength));
 
         return parsedRequest;
     }
 
-    private String parseRequestLine(BufferedReader in) {
+    private String parseRequestLine() {
         String requestLine = null;
         try {
              requestLine = in.readLine();
@@ -29,7 +35,7 @@ public class RequestParser {
         return requestLine;
     }
 
-    private HashMap parseRequestHeaders(BufferedReader in) {
+    private HashMap parseRequestHeaders() {
         HashMap<String, String> requestHeaders = new HashMap<>();
         try {
             String header = in.readLine();
@@ -44,7 +50,7 @@ public class RequestParser {
         return requestHeaders;
     }
 
-    private String parseRequestBody(BufferedReader in, int contentLength) {
+    private String parseRequestBody(int contentLength) {
         StringBuilder requestBody = new StringBuilder();
         int nextBodyChar;
         try {
