@@ -66,8 +66,16 @@ public class RequestParserTest {
 
     @Test
     public void shouldParseHeadersFromInputStream() throws IOException {
-        in.readLine();
+        parser.parseRequestLine(in);
 
         assertEquals(expectedHeaders, parser.parseRequestHeaders(in));
+    }
+
+    @Test
+    public void shouldParseBodyFromInputStream() {
+        parser.parseRequestLine(in);
+        parser.parseRequestHeaders(in);
+
+        assertEquals(requestBody, parser.parseRequestBody(in, requestBody.length()));
     }
 }

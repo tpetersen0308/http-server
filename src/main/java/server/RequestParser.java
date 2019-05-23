@@ -7,29 +7,16 @@ import java.util.HashMap;
 public class RequestParser {
     public HashMap parse(BufferedReader in) {
         HashMap parsedRequest = new HashMap();
-        try {
-            String requestLine = parseRequestLine(in);
-            parsedRequest.put("requestLine", requestLine);
 
-            HashMap<String, String> requestHeaders = parseRequestHeaders(in);
-            parsedRequest.put("requestHeaders", requestHeaders);
+        parsedRequest.put("requestLine", parseRequestLine(in));
 
-            String contentLengthStr = requestHeaders.get("Content-Length");
-            Integer contentLengthInt = contentLengthStr == null ? 0 : Integer.parseInt(contentLengthStr);
+        HashMap<String, String> requestHeaders = parseRequestHeaders(in);
+        parsedRequest.put("requestHeaders", requestHeaders);
 
-            StringBuilder requestBody = new StringBuilder();
-            int nextBodyChar;
+        String contentLengthStr = requestHeaders.get("Content-Length");
+        Integer contentLengthInt = contentLengthStr == null ? 0 : Integer.parseInt(contentLengthStr);
+        parsedRequest.put("requestBody", parseRequestBody(in, contentLengthInt));
 
-            for(int i = 0; i < contentLengthInt; i++) {
-                nextBodyChar = in.read();
-                requestBody.append((char)nextBodyChar);
-            }
-
-            parsedRequest.put("requestBody", requestBody.toString());
-
-        } catch (IOException e) {
-            System.err.println(e);
-        }
         return parsedRequest;
     }
 
@@ -56,5 +43,20 @@ public class RequestParser {
             System.err.println(err);
         }
         return requestHeaders;
+    }
+
+    public String parseRequestBody(BufferedReader in, int contentLength) {
+        StringBuilder requestBody = new StringBuilder();
+        int nextBodyChar;
+        try {
+            for(int i = 0; i < contentLength; i++) {
+                nextBodyChar = in.read();
+                requestBody.append((char)nextBodyChar);
+            }
+        } catch (IOException err) {
+            System.err.println(err);
+        }
+
+        return requestBody.toString();
     }
 }
