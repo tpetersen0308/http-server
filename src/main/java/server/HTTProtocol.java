@@ -4,7 +4,8 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
-import static server.StatusCodes.*;
+import static server.StatusCodes.OK;
+import static server.StatusCodes.NOT_FOUND;
 
 public class HTTProtocol implements Runnable {
     private Client client;
