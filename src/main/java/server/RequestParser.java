@@ -19,7 +19,7 @@ public class RequestParser {
         return parsedRequest;
     }
 
-    public String parseRequestLine(BufferedReader in) {
+    private String parseRequestLine(BufferedReader in) {
         String requestLine = null;
         try {
              requestLine = in.readLine();
@@ -29,7 +29,7 @@ public class RequestParser {
         return requestLine;
     }
 
-    public HashMap parseRequestHeaders(BufferedReader in) {
+    private HashMap parseRequestHeaders(BufferedReader in) {
         HashMap<String, String> requestHeaders = new HashMap<>();
         try {
             String header = in.readLine();
@@ -44,7 +44,7 @@ public class RequestParser {
         return requestHeaders;
     }
 
-    public String parseRequestBody(BufferedReader in, int contentLength) {
+    private String parseRequestBody(BufferedReader in, int contentLength) {
         StringBuilder requestBody = new StringBuilder();
         int nextBodyChar;
         try {
