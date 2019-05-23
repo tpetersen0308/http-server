@@ -24,13 +24,18 @@ public class HTTProtocol implements Runnable {
         RequestParser parser = new RequestParser(in);
         HashMap parsedRequest = parser.parse();
         Request request = new Request(parsedRequest);
+        String responseStatus = getResponseStatus(request);
 
-        if(Arrays.asList(ROUTES).contains(request.getPath())){
-            out.print(OK);
-        } else {
-            out.print(NOT_FOUND);
-        }
+        out.print(responseStatus);
         out.flush();
         client.closeSocket();
+    }
+
+    private String getResponseStatus(Request request) {
+        if(Arrays.asList(ROUTES).contains(request.getPath())){
+            return OK;
+        } else {
+            return NOT_FOUND;
+        }
     }
 }
