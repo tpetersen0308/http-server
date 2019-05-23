@@ -18,16 +18,16 @@ public class HTTProtocol implements Runnable {
     }
 
     public void run() {
-            RequestParser parser = new RequestParser();
-            HashMap parsedRequest = parser.parse(in);
-            String requestLine = (String)parsedRequest.get("requestLine");
+        RequestParser parser = new RequestParser();
+        HashMap parsedRequest = parser.parse(in);
+        String requestLine = (String)parsedRequest.get("requestLine");
 
-            if(requestLine.contains("/simple_get")){
-                out.print(OK);
-            } else {
-                out.print(NOT_FOUND);
-            }
-            out.flush();
-            client.closeSocket();
+        if(requestLine.contains("/simple_get")){
+            out.print(OK);
+        } else {
+            out.print(NOT_FOUND);
+        }
+        out.flush();
+        client.closeSocket();
     }
 }
