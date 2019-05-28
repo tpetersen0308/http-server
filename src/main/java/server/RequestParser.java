@@ -19,8 +19,7 @@ public class RequestParser {
         HashMap<String, String> requestHeaders = parseRequestHeaders();
         parsedRequest.put("requestHeaders", requestHeaders);
 
-        Integer contentLength = parseRequestBodyContentLength(requestHeaders);
-        parsedRequest.put("requestBody", parseRequestBody(contentLength));
+        parsedRequest.put("requestBody", parseRequestBody(requestHeaders));
 
         return parsedRequest;
     }
@@ -50,9 +49,11 @@ public class RequestParser {
         return requestHeaders;
     }
 
-    private String parseRequestBody(int contentLength) {
+    private String parseRequestBody(HashMap requestHeaders) {
+        Integer contentLength = parseRequestBodyContentLength(requestHeaders);
         StringBuilder requestBody = new StringBuilder();
         int nextBodyChar;
+
         try {
             for (int i = 0; i < contentLength; i++) {
                 nextBodyChar = in.read();
