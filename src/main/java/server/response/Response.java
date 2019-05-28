@@ -8,22 +8,26 @@ import static server.Routes.ROUTES;
 
 public class Response {
     private Request request;
-    private String status;
+    private String statusLine;
 
     public Response(Request request) {
         this.request = request;
-        this.status = this.setStatus();
+        this.statusLine = this.setStatusLine();
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusLine() {
+        return statusLine;
     }
 
-    private String setStatus() {
+    private String setStatusLine() {
         if (Arrays.asList(ROUTES).contains(request.getPath())) {
-            return ResponseComponents.HTTP_VERSION + ResponseComponents.SP + StatusCodes.OK + ResponseComponents.SP + ReasonPhrases.OK + ResponseComponents.CRLF + ResponseComponents.CRLF;
+            return formatStatusLine(StatusCodes.OK, ReasonPhrases.OK);
         } else {
-            return ResponseComponents.HTTP_VERSION + ResponseComponents.SP + StatusCodes.NOT_FOUND + ResponseComponents.SP + ReasonPhrases.NOT_FOUND + ResponseComponents.CRLF + ResponseComponents.CRLF;
+            return formatStatusLine(StatusCodes.NOT_FOUND, ReasonPhrases.NOT_FOUND);
         }
+    }
+
+    private String formatStatusLine(String code, String reason) {
+        return ResponseComponents.HTTP_VERSION + ResponseComponents.SP + code + ResponseComponents.SP + reason + ResponseComponents.CRLF + ResponseComponents.CRLF;
     }
 }
