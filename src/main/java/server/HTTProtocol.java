@@ -21,7 +21,7 @@ public class HTTProtocol implements Runnable {
         Request request = new Request(parser.parse());
         Response response = new Response(request);
 
-        out.print(response.getStatus());
+        out.print(response.getStatusLine());
         out.flush();
         client.closeSocket();
     }
