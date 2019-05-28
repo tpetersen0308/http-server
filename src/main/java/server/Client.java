@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class Client {
-    Socket socket;
+    private Socket socket;
     private BufferedReader inputStreamReader;
     private PrintWriter outputStreamWriter;
 
