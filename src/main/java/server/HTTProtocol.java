@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
-import static server.StatusCodes.OK;
-import static server.StatusCodes.NOT_FOUND;
 import static server.Routes.ROUTES;
 
 public class HTTProtocol implements Runnable {
@@ -31,9 +29,9 @@ public class HTTProtocol implements Runnable {
 
     private String getResponseStatus(Request request) {
         if (Arrays.asList(ROUTES).contains(request.getPath())) {
-            return OK;
+            return ResponseComponents.HTTP_VERSION + ResponseComponents.SP + StatusCodes.OK + ResponseComponents.SP + ReasonPhrases.OK + ResponseComponents.CRLF + ResponseComponents.CRLF;
         } else {
-            return NOT_FOUND;
+            return ResponseComponents.HTTP_VERSION + ResponseComponents.SP + StatusCodes.NOT_FOUND + ResponseComponents.SP + ReasonPhrases.NOT_FOUND + ResponseComponents.CRLF + ResponseComponents.CRLF;
         }
     }
 }
