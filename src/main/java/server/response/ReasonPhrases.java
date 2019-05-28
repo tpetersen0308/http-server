@@ -1,4 +1,4 @@
-package server;
+package server.response;
 
 public class ReasonPhrases {
     private ReasonPhrases() {

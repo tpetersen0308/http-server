@@ -1,10 +1,9 @@
 package server;
 
+import server.response.Response;
+
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import java.util.Arrays;
-
-import static server.Routes.ROUTES;
 
 public class HTTProtocol implements Runnable {
     private Client client;
@@ -20,18 +19,10 @@ public class HTTProtocol implements Runnable {
     public void run() {
         RequestParser parser = new RequestParser(in);
         Request request = new Request(parser.parse());
-        String responseStatus = getResponseStatus(request);
+        Response response = new Response(request);
 
-        out.print(responseStatus);
+        out.print(response.getStatus());
         out.flush();
         client.closeSocket();
-    }
-
-    private String getResponseStatus(Request request) {
-        if (Arrays.asList(ROUTES).contains(request.getPath())) {
-            return ResponseComponents.HTTP_VERSION + ResponseComponents.SP + StatusCodes.OK + ResponseComponents.SP + ReasonPhrases.OK + ResponseComponents.CRLF + ResponseComponents.CRLF;
-        } else {
-            return ResponseComponents.HTTP_VERSION + ResponseComponents.SP + StatusCodes.NOT_FOUND + ResponseComponents.SP + ReasonPhrases.NOT_FOUND + ResponseComponents.CRLF + ResponseComponents.CRLF;
-        }
     }
 }
