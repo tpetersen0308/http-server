@@ -25,7 +25,7 @@ public class HTTProtocolTest {
         Client client = new Client(socket);
         HTTProtocol protocol = new HTTProtocol(client);
         protocol.run();
-        assertEquals("HTTP/1.1 200 OK\r\n\r\n", socket.getOutputStream().toString());
+        assertEquals("HTTP/1.1 200 OK\r\nAllow: GET, HEAD\r\n", socket.getOutputStream().toString());
     }
 
     @Test
@@ -34,6 +34,15 @@ public class HTTProtocolTest {
         Client client = new Client(socket);
         HTTProtocol protocol = new HTTProtocol(client);
         protocol.run();
-        assertEquals("HTTP/1.1 200 OK\r\n\r\n", socket.getOutputStream().toString());
+        assertEquals("HTTP/1.1 200 OK\r\nAllow: GET, HEAD\r\n", socket.getOutputStream().toString());
+    }
+
+    @Test
+    public void shouldReturnOkWithAllowedHeadersForSimpleOptionsRequest() throws IOException {
+        SocketStub socket = new SocketStub("OPTIONS /method_options HTTP/1.1");
+        Client client = new Client(socket);
+        HTTProtocol protocol = new HTTProtocol(client);
+        protocol.run();
+        assertEquals("HTTP/1.1 200 OK\r\nAllow: GET, HEAD, OPTIONS\r\n", socket.getOutputStream().toString());
     }
 }
