@@ -2,6 +2,7 @@ package server.response;
 
 import server.request.Request;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,13 +15,12 @@ public class ResponseBuilder {
         if (route != null) {
             return new Response(StatusCodes.OK, ReasonPhrases.OK, buildHeaders(route));
         } else {
-            return new Response(StatusCodes.NOT_FOUND, ReasonPhrases.NOT_FOUND, new HashMap<String, String>());
+            return new Response(StatusCodes.NOT_FOUND, ReasonPhrases.NOT_FOUND, Collections.<String, String>emptyMap());
         }
     }
 
     private static Map<String, String> buildHeaders(Map<String, String> route) {
-        Map<String, String> headers = new HashMap();
-        headers.put("Allow", route.get("methods"));
+        Map<String, String> headers = Collections.singletonMap("Allow", route.get("methods"));
         return headers;
     }
 }
