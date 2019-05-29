@@ -4,6 +4,7 @@ import server.request.Request;
 import server.request.RequestParser;
 import server.response.Response;
 import server.response.ResponseBuilder;
+import server.response.ResponseParser;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
@@ -23,7 +24,7 @@ public class HTTProtocol implements Runnable {
         Request request = RequestParser.parse(in);
         Response response = ResponseBuilder.buildResponse(request);
 
-        out.print(response.statusLine());
+        out.print(ResponseParser.parse(response));
         out.flush();
         client.closeSocket();
     }
