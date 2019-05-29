@@ -14,5 +14,8 @@ public class Routes {
         put("/get_with_body", new HashMap() {{
             put("methods", "GET, HEAD");
         }});
+        put("/method_options", new HashMap() {{
+            put("methods", "GET, HEAD, OPTIONS");
+        }});
     }};
 }
