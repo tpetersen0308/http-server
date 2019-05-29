@@ -9,8 +9,6 @@ import server.stubs.SocketStub;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Map;
-import java.util.HashMap;
 
 public class RequestParserTest {
     String request;
@@ -18,8 +16,6 @@ public class RequestParserTest {
     String requestBody;
     SocketStub socket;
     BufferedReader in;
-    RequestParser parser;
-    Map expectedHeaders;
 
     @Before
     public void stubRequest() {
@@ -30,30 +26,17 @@ public class RequestParserTest {
     }
 
     @Before
-    public void stubHeaders() {
-        expectedHeaders = new HashMap<String, String>();
-        expectedHeaders.put("User-Agent", "Ruby");
-        expectedHeaders.put("Connection", "close");
-        expectedHeaders.put("Host", "127.0.0.1:5000");
-        expectedHeaders.put("Content-Length", "46");
-    }
-
-    @Before
     public void setupInputStreamReader() {
         socket = new SocketStub(request);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 
     @Test
-    public void shouldReturnEntireParsedRequest() {
-        HashMap expectedResult = new HashMap<>();
-        expectedResult.put("requestLine", requestLine);
-        expectedResult.put("requestHeaders", expectedHeaders);
-        expectedResult.put("requestBody", requestBody);
+    public void shouldParseRequestLine() {
         RequestParser parser = new RequestParser(in);
 
-        Map parsedRequest = parser.parse();
+        Request parsedRequest = parser.parse();
 
-        assertEquals(expectedResult, parsedRequest);
+        assertEquals(requestLine, parsedRequest.requestLine());
     }
 }

@@ -12,17 +12,14 @@ public class RequestParser {
         this.in = in;
     }
 
-    public Map parse() {
-        Map parsedRequest = new HashMap();
-
-        parsedRequest.put("requestLine", parseRequestLine());
+    public Request parse() {
+        String requestLine = parseRequestLine();
 
         Map<String, String> requestHeaders = parseRequestHeaders();
-        parsedRequest.put("requestHeaders", requestHeaders);
 
-        parsedRequest.put("requestBody", parseRequestBody(requestHeaders));
+        String requestBody = parseRequestBody(requestHeaders);
 
-        return parsedRequest;
+        return new Request(requestLine, requestHeaders, requestBody);
     }
 
     private String parseRequestLine() {

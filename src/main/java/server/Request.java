@@ -3,15 +3,17 @@ package server;
 import java.util.Map;
 
 public class Request {
-    private Map parsedRequest;
+    private String requestLine;
 
-    public Request(Map parsedRequest) {
-        this.parsedRequest = parsedRequest;
+    public Request(String requestLine, Map<String, String> headers, String body) {
+        this.requestLine = requestLine;
+    }
+
+    public String requestLine() {
+        return requestLine;
     }
 
     public String getPath() {
-        String requestLine = (String) parsedRequest.get("requestLine");
-        String requestPath = requestLine.split(" ")[1].trim();
-        return requestPath;
+        return requestLine.split(" ")[1].trim();
     }
 }

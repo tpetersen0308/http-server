@@ -17,8 +17,8 @@ public class HTTProtocol implements Runnable {
     }
 
     public void run() {
-        RequestParser parser = new RequestParser(in);
-        Request request = new Request(parser.parse());
+        RequestParser requestParser = new RequestParser(in);
+        Request request = requestParser.parse();
         Response response = new Response(request);
 
         out.print(response.getStatusLine());

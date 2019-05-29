@@ -5,13 +5,13 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class RequestTest {
     @Test
     public void shouldReturnRequestPath() {
-        HashMap<String, String> parsedRequestStub = new HashMap<>();
-        parsedRequestStub.put("requestLine", "GET /simple_get HTTP/1.1");
-        Request request = new Request(parsedRequestStub);
+        Map<String, String> emptyHeaders = new HashMap<>();
+        Request request = new Request("GET /simple_get HTTP/1.1", emptyHeaders, "");
 
         assertEquals("/simple_get", request.getPath());
     }
