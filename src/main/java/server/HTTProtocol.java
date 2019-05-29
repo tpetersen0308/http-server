@@ -1,9 +1,12 @@
 package server;
 
+import server.request.Request;
+import server.request.RequestParser;
+import server.response.Response;
+import server.response.ResponseBuilder;
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
-import static server.StatusCodes.*;
 
 public class HTTProtocol implements Runnable {
     private Client client;
@@ -17,14 +20,11 @@ public class HTTProtocol implements Runnable {
     }
 
     public void run() {
-        try {
-            while(in.readLine() != null) {
-                out.print(NOT_FOUND);
-                out.flush();
-                client.closeSocket();
-            }
-        } catch(IOException e) {
-            System.err.println(e);
-        }
+        Request request = RequestParser.parse(in);
+        Response response = ResponseBuilder.buildResponse(request);
+
+        out.print(response.statusLine());
+        out.flush();
+        client.closeSocket();
     }
 }

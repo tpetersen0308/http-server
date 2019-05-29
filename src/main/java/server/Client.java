@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class Client {
-    Socket socket;
+    private Socket socket;
     private BufferedReader inputStreamReader;
     private PrintWriter outputStreamWriter;
 
@@ -29,7 +29,7 @@ public class Client {
     public void closeSocket() {
         try {
             socket.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.err.println(e);
         }
     }

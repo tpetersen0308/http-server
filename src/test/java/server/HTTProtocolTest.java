@@ -1,7 +1,9 @@
 package server;
 
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
+
 import server.stubs.SocketStub;
 
 import java.io.IOException;
@@ -14,6 +16,24 @@ public class HTTProtocolTest {
         Client client = new Client(socket);
         HTTProtocol protocol = new HTTProtocol(client);
         protocol.run();
-        assertEquals("HTTP/1.1 404 Not Found\r\n", socket.getOutputStream().toString());
+        assertEquals("HTTP/1.1 404 Not Found\r\n\r\n", socket.getOutputStream().toString());
+    }
+
+    @Test
+    public void shouldReturnOkForSimpleHeadRequest() throws IOException {
+        SocketStub socket = new SocketStub("HEAD /simple_get HTTP/1.1");
+        Client client = new Client(socket);
+        HTTProtocol protocol = new HTTProtocol(client);
+        protocol.run();
+        assertEquals("HTTP/1.1 200 OK\r\n\r\n", socket.getOutputStream().toString());
+    }
+
+    @Test
+    public void shouldReturnOkWithNoBodyForSimpleHeadRequest() throws IOException {
+        SocketStub socket = new SocketStub("HEAD /get_with_body HTTP/1.1");
+        Client client = new Client(socket);
+        HTTProtocol protocol = new HTTProtocol(client);
+        protocol.run();
+        assertEquals("HTTP/1.1 200 OK\r\n\r\n", socket.getOutputStream().toString());
     }
 }
