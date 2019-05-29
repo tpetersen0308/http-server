@@ -9,7 +9,7 @@ public class RequestParser {
 
     public static Request parse(BufferedReader in) {
         String requestLine = parseRequestLine(in);
-        String requestPath = requestLine.split(" ")[1].trim();
+        String requestPath = parseRequestPath(requestLine);
         Map<String, String> requestHeaders = parseRequestHeaders(in);
         String requestBody = parseRequestBody(in, requestHeaders);
 
@@ -24,6 +24,10 @@ public class RequestParser {
             System.err.println(err);
         }
         return requestLine;
+    }
+
+    private static String parseRequestPath(String requestLine) {
+        return requestLine.split(" ")[1].trim();
     }
 
     private static Map parseRequestHeaders(BufferedReader in) {
