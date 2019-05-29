@@ -14,12 +14,11 @@ public class RequestParser {
 
     public Request parse() {
         String requestLine = parseRequestLine();
-
+        String requestPath = requestLine.split(" ")[1].trim();
         Map<String, String> requestHeaders = parseRequestHeaders();
-
         String requestBody = parseRequestBody(requestHeaders);
 
-        return new Request(requestLine, requestHeaders, requestBody);
+        return new Request(requestLine, requestPath, requestHeaders, requestBody);
     }
 
     private String parseRequestLine() {

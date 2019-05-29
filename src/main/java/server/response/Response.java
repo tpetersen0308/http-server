@@ -20,7 +20,7 @@ public class Response {
     }
 
     private String setStatusLine() {
-        if (Arrays.asList(ROUTES).contains(request.getPath())) {
+        if (Arrays.asList(ROUTES).contains(request.path())) {
             return formatStatusLine(StatusCodes.OK, ReasonPhrases.OK);
         } else {
             return formatStatusLine(StatusCodes.NOT_FOUND, ReasonPhrases.NOT_FOUND);

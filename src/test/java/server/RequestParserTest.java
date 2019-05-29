@@ -34,9 +34,16 @@ public class RequestParserTest {
     @Test
     public void shouldParseRequestLine() {
         RequestParser parser = new RequestParser(in);
-
         Request parsedRequest = parser.parse();
 
         assertEquals(requestLine, parsedRequest.requestLine());
+    }
+
+    @Test
+    public void shouldParseRequestPath() {
+        RequestParser parser = new RequestParser(in);
+        Request parsedRequest = parser.parse();
+
+        assertEquals("/redirect", parsedRequest.path());
     }
 }
