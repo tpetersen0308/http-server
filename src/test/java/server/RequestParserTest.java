@@ -18,6 +18,7 @@ public class RequestParserTest {
     String requestHeaders;
     SocketStub socket;
     BufferedReader in;
+    Request parsedRequest;
 
     @Before
     public void stubRequest() {
@@ -58,5 +59,13 @@ public class RequestParserTest {
         assertEquals("close", parsedRequest.headers().get("Connection"));
         assertEquals("127.0.0.1:5000", parsedRequest.headers().get("Host"));
         assertEquals("46", parsedRequest.headers().get("Content-Length"));
+    }
+
+    @Test
+    public void shouldParseRequestBody() {
+        RequestParser parser = new RequestParser(in);
+        Request parsedRequest = parser.parse();
+
+        assertEquals(requestBody, parsedRequest.body());
     }
 }
