@@ -48,19 +48,14 @@ public class RequestParser {
 
     private String parseRequestBody(Map requestHeaders) {
         Integer contentLength = parseRequestBodyContentLength(requestHeaders);
-        StringBuilder requestBody = new StringBuilder();
-        int nextBodyChar;
+        char[] requestBody = new char[contentLength];
 
         try {
-            for (int i = 0; i < contentLength; i++) {
-                nextBodyChar = in.read();
-                requestBody.append((char) nextBodyChar);
-            }
+            in.read(requestBody, 0, contentLength);
         } catch (IOException err) {
             System.err.println(err);
         }
-
-        return requestBody.toString();
+        return new String(requestBody);
     }
 
     private Integer parseRequestBodyContentLength(Map<String, String> requestHeaders) {
