@@ -3,7 +3,6 @@ package server.response;
 import server.request.Request;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import static server.Routes.ROUTES;
