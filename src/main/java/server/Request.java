@@ -1,11 +1,11 @@
 package server;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class Request {
-    private HashMap parsedRequest;
+    private Map parsedRequest;
 
-    public Request(HashMap parsedRequest) {
+    public Request(Map parsedRequest) {
         this.parsedRequest = parsedRequest;
     }
 

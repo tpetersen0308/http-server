@@ -2,6 +2,7 @@ package server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
 import java.util.HashMap;
 
 public class RequestParser {
@@ -11,12 +12,12 @@ public class RequestParser {
         this.in = in;
     }
 
-    public HashMap parse() {
-        HashMap parsedRequest = new HashMap();
+    public Map parse() {
+        Map parsedRequest = new HashMap();
 
         parsedRequest.put("requestLine", parseRequestLine());
 
-        HashMap<String, String> requestHeaders = parseRequestHeaders();
+        Map<String, String> requestHeaders = parseRequestHeaders();
         parsedRequest.put("requestHeaders", requestHeaders);
 
         parsedRequest.put("requestBody", parseRequestBody(requestHeaders));
@@ -34,8 +35,8 @@ public class RequestParser {
         return requestLine;
     }
 
-    private HashMap parseRequestHeaders() {
-        HashMap<String, String> requestHeaders = new HashMap<>();
+    private Map parseRequestHeaders() {
+        Map<String, String> requestHeaders = new HashMap<>();
         try {
             String header = in.readLine();
             while (header != null && !header.isEmpty()) {
@@ -49,7 +50,7 @@ public class RequestParser {
         return requestHeaders;
     }
 
-    private String parseRequestBody(HashMap requestHeaders) {
+    private String parseRequestBody(Map requestHeaders) {
         Integer contentLength = parseRequestBodyContentLength(requestHeaders);
         StringBuilder requestBody = new StringBuilder();
         int nextBodyChar;
@@ -66,7 +67,7 @@ public class RequestParser {
         return requestBody.toString();
     }
 
-    private Integer parseRequestBodyContentLength(HashMap<String, String> requestHeaders) {
+    private Integer parseRequestBodyContentLength(Map<String, String> requestHeaders) {
         String contentLengthStr = requestHeaders.get("Content-Length");
         return contentLengthStr == null ? 0 : Integer.parseInt(contentLengthStr);
     }

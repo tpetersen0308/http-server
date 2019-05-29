@@ -9,6 +9,7 @@ import server.stubs.SocketStub;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.HashMap;
 
 public class RequestParserTest {
@@ -18,7 +19,7 @@ public class RequestParserTest {
     SocketStub socket;
     BufferedReader in;
     RequestParser parser;
-    HashMap expectedHeaders;
+    Map expectedHeaders;
 
     @Before
     public void stubRequest() {
@@ -51,7 +52,7 @@ public class RequestParserTest {
         expectedResult.put("requestBody", requestBody);
         RequestParser parser = new RequestParser(in);
 
-        HashMap parsedRequest = parser.parse();
+        Map parsedRequest = parser.parse();
 
         assertEquals(expectedResult, parsedRequest);
     }
