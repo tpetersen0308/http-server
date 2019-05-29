@@ -20,8 +20,7 @@ public class HTTProtocol implements Runnable {
     }
 
     public void run() {
-        RequestParser requestParser = new RequestParser(in);
-        Request request = requestParser.parse();
+        Request request = RequestParser.parse(in);
         Response response = ResponseBuilder.buildResponse(request);
 
         out.print(response.statusLine());

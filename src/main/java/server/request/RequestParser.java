@@ -1,29 +1,22 @@
 package server.request;
 
-import server.request.Request;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 
 public class RequestParser {
-    private BufferedReader in;
 
-    public RequestParser(BufferedReader in) {
-        this.in = in;
-    }
-
-    public Request parse() {
-        String requestLine = parseRequestLine();
+    public static Request parse(BufferedReader in) {
+        String requestLine = parseRequestLine(in);
         String requestPath = requestLine.split(" ")[1].trim();
-        Map<String, String> requestHeaders = parseRequestHeaders();
-        String requestBody = parseRequestBody(requestHeaders);
+        Map<String, String> requestHeaders = parseRequestHeaders(in);
+        String requestBody = parseRequestBody(in, requestHeaders);
 
         return new Request(requestLine, requestPath, requestHeaders, requestBody);
     }
 
-    private String parseRequestLine() {
+    private static String parseRequestLine(BufferedReader in) {
         String requestLine = null;
         try {
             requestLine = in.readLine();
@@ -33,7 +26,7 @@ public class RequestParser {
         return requestLine;
     }
 
-    private Map parseRequestHeaders() {
+    private static Map parseRequestHeaders(BufferedReader in) {
         Map<String, String> requestHeaders = new HashMap<>();
         try {
             String header = in.readLine();
@@ -48,7 +41,7 @@ public class RequestParser {
         return requestHeaders;
     }
 
-    private String parseRequestBody(Map requestHeaders) {
+    private static String parseRequestBody(BufferedReader in, Map requestHeaders) {
         Integer contentLength = parseRequestBodyContentLength(requestHeaders);
         char[] requestBody = new char[contentLength];
 
@@ -60,7 +53,7 @@ public class RequestParser {
         return new String(requestBody);
     }
 
-    private Integer parseRequestBodyContentLength(Map<String, String> requestHeaders) {
+    private static Integer parseRequestBodyContentLength(Map<String, String> requestHeaders) {
         String contentLengthStr = requestHeaders.get("Content-Length");
         return contentLengthStr == null ? 0 : Integer.parseInt(contentLengthStr);
     }

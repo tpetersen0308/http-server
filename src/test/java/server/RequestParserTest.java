@@ -19,7 +19,6 @@ public class RequestParserTest {
     String requestHeaders;
     SocketStub socket;
     BufferedReader in;
-    Request parsedRequest;
 
     @Before
     public void stubRequest() {
@@ -37,24 +36,21 @@ public class RequestParserTest {
 
     @Test
     public void shouldParseRequestLine() {
-        RequestParser parser = new RequestParser(in);
-        Request parsedRequest = parser.parse();
+        Request parsedRequest = RequestParser.parse(in);
 
         assertEquals(requestLine, parsedRequest.requestLine());
     }
 
     @Test
     public void shouldParseRequestPath() {
-        RequestParser parser = new RequestParser(in);
-        Request parsedRequest = parser.parse();
+        Request parsedRequest = RequestParser.parse(in);
 
         assertEquals("/redirect", parsedRequest.path());
     }
 
     @Test
     public void shouldParseRequestHeaders() {
-        RequestParser parser = new RequestParser(in);
-        Request parsedRequest = parser.parse();
+        Request parsedRequest = RequestParser.parse(in);
 
         assertEquals("Ruby", parsedRequest.headers().get("User-Agent"));
         assertEquals("close", parsedRequest.headers().get("Connection"));
@@ -64,8 +60,7 @@ public class RequestParserTest {
 
     @Test
     public void shouldParseRequestBody() {
-        RequestParser parser = new RequestParser(in);
-        Request parsedRequest = parser.parse();
+        Request parsedRequest = RequestParser.parse(in);
 
         assertEquals(requestBody, parsedRequest.body());
     }
