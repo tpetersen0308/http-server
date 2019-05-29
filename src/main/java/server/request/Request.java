@@ -1,4 +1,4 @@
-package server;
+package server.request;
 
 import java.util.Map;
 

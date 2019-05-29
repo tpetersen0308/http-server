@@ -1,6 +1,6 @@
 package server.response;
 
-import server.Request;
+import server.request.Request;
 
 import java.util.Arrays;
 
