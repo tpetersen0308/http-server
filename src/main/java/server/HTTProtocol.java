@@ -23,8 +23,8 @@ public class HTTProtocol implements Runnable {
     public void run() {
         Request request = RequestParser.parse(in);
         Response response = ResponseBuilder.buildResponse(request);
-
-        out.print(ResponseParser.parse(response));
+        String parsedResponse = ResponseParser.parse(response);
+        out.print(parsedResponse);
         out.flush();
         client.closeSocket();
     }
