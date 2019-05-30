@@ -11,8 +11,12 @@ public class ResponseParser {
     }
 
     private static String parseHeaders(Response response) {
+
         if(response.headers().size() > 0) {
-            return response.headers().toString().replace("{", "").replace("}", "").replace("=", ": ") + ResponseComponents.CRLF;
+            return response.headers().toString()
+                    .replace("{", "")
+                    .replace("}", "")
+                    .replace("=", ": ") + ResponseComponents.CRLF;
         } else {
             return "";
         }
