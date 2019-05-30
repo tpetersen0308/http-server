@@ -23,15 +23,22 @@ public class RequestParserTest {
     @Before
     public void stubRequest() {
         requestLine = "GET /redirect HTTP/1.1";
-        requestHeaders = "User-Agent: Ruby\n" + "Connection: close\n" + "Host: 127.0.0.1:5000\n" + "Content-Length: 46";
+        requestHeaders = "User-Agent: Ruby\r\n" + "Connection: close\r\n" + "Host: 127.0.0.1:5000\r\n" + "Content-Length: 46\r\n";
         requestBody = "lorem ipsum dolor sit amet, adipiscing elit...";
-        request = requestLine + "\r\n" + requestHeaders + "\n\n" + requestBody;
+        request = requestLine + "\r\n" + requestHeaders + "\r\n" + requestBody;
     }
 
     @Before
     public void setupInputStreamReader() {
         socket = new SocketStub(request);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    }
+
+    @Test
+    public void shouldParseRequestMethod() {
+        Request parsedRequest = RequestParser.parse(in);
+
+        assertEquals("GET", parsedRequest.method());
     }
 
     @Test
