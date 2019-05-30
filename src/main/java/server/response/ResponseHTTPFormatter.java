@@ -1,16 +1,16 @@
 package server.response;
 
-public class ResponseParser {
+public class ResponseHTTPFormatter {
 
-    public static String parse(Response response) {
-        return parseStatusLine(response)+ ResponseComponents.CRLF + parseHeaders(response) + ResponseComponents.CRLF + response.body();
+    public static String formatHTTPResponse(Response response) {
+        return formatStatusLineForHTTPResponse(response)+ ResponseComponents.CRLF + formatHeadersForHTTPResponse(response) + ResponseComponents.CRLF + response.body();
     }
 
-    private static String parseStatusLine(Response response) {
+    private static String formatStatusLineForHTTPResponse(Response response) {
         return ResponseComponents.HTTP_VERSION + ResponseComponents.SP + response.statusCode() + ResponseComponents.SP + response.reasonPhrase();
     }
 
-    private static String parseHeaders(Response response) {
+    private static String formatHeadersForHTTPResponse(Response response) {
 
         if(response.headers().size() > 0) {
             return response.headers().toString()

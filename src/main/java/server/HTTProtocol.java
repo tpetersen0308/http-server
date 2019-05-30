@@ -4,7 +4,7 @@ import server.request.Request;
 import server.request.RequestParser;
 import server.response.Response;
 import server.response.ResponseBuilder;
-import server.response.ResponseParser;
+import server.response.ResponseHTTPFormatter;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
@@ -23,7 +23,7 @@ public class HTTProtocol implements Runnable {
     public void run() {
         Request request = RequestParser.parse(in);
         Response response = ResponseBuilder.buildResponse(request);
-        String parsedResponse = ResponseParser.parse(response);
+        String parsedResponse = ResponseHTTPFormatter.formatHTTPResponse(response);
         out.print(parsedResponse);
         out.flush();
         client.closeSocket();
