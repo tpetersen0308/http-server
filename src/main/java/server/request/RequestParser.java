@@ -13,7 +13,7 @@ public class RequestParser {
         Map<String, String> requestHeaders = parseRequestHeaders(in);
         String requestBody = parseRequestBody(in, requestHeaders);
 
-        return new Request(requestLine, requestPath, requestHeaders, requestBody);
+        return new Request(requestPath, requestHeaders, requestBody);
     }
 
     private static String parseRequestLine(BufferedReader in) {

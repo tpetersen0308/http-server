@@ -1,13 +1,27 @@
 package server.response;
 
-public class Response {
-    private String statusLine;
+import java.util.Map;
 
-    public Response(String statusCode, String reasonPhrase) {
-        this.statusLine = ResponseComponents.HTTP_VERSION + ResponseComponents.SP + statusCode + ResponseComponents.SP + reasonPhrase + ResponseComponents.CRLF + ResponseComponents.CRLF;
+public class Response {
+    private String statusCode;
+    private String reasonPhrase;
+    private Map<String, String> headers;
+
+    public Response(String statusCode, String reasonPhrase, Map<String, String> headers) {
+        this.statusCode = statusCode;
+        this.reasonPhrase = reasonPhrase;
+        this.headers = headers;
     }
 
-    public String statusLine() {
-        return statusLine;
+    public String statusCode() {
+        return statusCode;
+    }
+
+    public String reasonPhrase() {
+        return reasonPhrase;
+    }
+
+    public Map<String, String> headers() {
+        return headers;
     }
 }

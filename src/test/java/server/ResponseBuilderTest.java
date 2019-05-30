@@ -11,18 +11,28 @@ import java.util.HashMap;
 
 public class ResponseBuilderTest {
     @Test
-    public void shouldReturnResponseWithOKStatusLine() {
-        Request request = new Request("GET /simple_get HTTP/1.1", "/simple_get", new HashMap<String, String>(), "");
+    public void shouldReturnResponseWithOKStatus() {
+        Request request = new Request("/simple_get", new HashMap<String, String>(), "");
         Response response = ResponseBuilder.buildResponse(request);
 
-        assertEquals("HTTP/1.1 200 OK\r\n\r\n", response.statusLine());
+        assertEquals("200", response.statusCode());
+        assertEquals("OK", response.reasonPhrase());
     }
 
     @Test
     public void shouldReturnResponseWithNotFoundStatusLine() {
-        Request request = new Request("GET /not_found_resource HTTP/1.1", "/not_found_resource", new HashMap<String, String>(), "");
+        Request request = new Request("/not_found_resource", new HashMap<String, String>(), "");
         Response response = ResponseBuilder.buildResponse(request);
 
-        assertEquals("HTTP/1.1 404 Not Found\r\n\r\n", response.statusLine());
+        assertEquals("404", response.statusCode());
+        assertEquals("Not Found", response.reasonPhrase());
+    }
+
+    @Test
+    public void shouldReturnResponseWithHeaders() {
+        Request request = new Request("/method_options", new HashMap<String, String>(), "");
+        Response response = ResponseBuilder.buildResponse(request);
+
+        assertEquals("GET, HEAD, OPTIONS", response.headers().get("Allow"));
     }
 }

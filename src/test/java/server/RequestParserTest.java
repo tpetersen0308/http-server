@@ -35,13 +35,6 @@ public class RequestParserTest {
     }
 
     @Test
-    public void shouldParseRequestLine() {
-        Request parsedRequest = RequestParser.parse(in);
-
-        assertEquals(requestLine, parsedRequest.requestLine());
-    }
-
-    @Test
     public void shouldParseRequestPath() {
         Request parsedRequest = RequestParser.parse(in);
 
