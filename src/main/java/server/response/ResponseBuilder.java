@@ -12,14 +12,26 @@ public class ResponseBuilder {
         Map<String, String> route = ROUTES.get(request.path());
 
         if (route != null) {
-            return new Response(StatusCodes.OK, ReasonPhrases.OK, buildHeaders(route));
+            return new Response(StatusCodes.OK, ReasonPhrases.OK, buildHeaders(route), getBody(request));
         } else {
-            return new Response(StatusCodes.NOT_FOUND, ReasonPhrases.NOT_FOUND, Collections.<String, String>emptyMap());
+            return new Response(StatusCodes.NOT_FOUND, ReasonPhrases.NOT_FOUND, Collections.<String, String>emptyMap(),"");
         }
     }
 
     private static Map<String, String> buildHeaders(Map<String, String> route) {
         Map<String, String> headers = Collections.singletonMap("Allow", route.get("methods"));
         return headers;
+    }
+
+    private static String getBody(Request request) {
+        String method = request.method();
+        String body;
+
+        if(method.equals("POST")) {
+            body = request.body();
+        } else {
+            body =  "";
+        }
+        return body;
     }
 }

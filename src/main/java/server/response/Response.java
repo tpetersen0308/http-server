@@ -6,11 +6,13 @@ public class Response {
     private String statusCode;
     private String reasonPhrase;
     private Map<String, String> headers;
+    private String body;
 
-    public Response(String statusCode, String reasonPhrase, Map<String, String> headers) {
+    public Response(String statusCode, String reasonPhrase, Map<String, String> headers, String body) {
         this.statusCode = statusCode;
         this.reasonPhrase = reasonPhrase;
         this.headers = headers;
+        this.body = body;
     }
 
     public String statusCode() {
@@ -23,5 +25,9 @@ public class Response {
 
     public Map<String, String> headers() {
         return headers;
+    }
+
+    public String body() {
+        return body;
     }
 }
