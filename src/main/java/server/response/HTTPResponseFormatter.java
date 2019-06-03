@@ -2,7 +2,7 @@ package server.response;
 
 public class HTTPResponseFormatter {
 
-    public static String stringifyResponse(Response response) {
+    public static String stringify(Response response) {
         return stringifyStatusLine(response)+ ResponseComponents.CRLF + stringifyHeaders(response) + ResponseComponents.CRLF + response.body();
     }
 
