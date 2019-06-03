@@ -30,10 +30,11 @@ public class ResponseBuilderTest {
 
     @Test
     public void shouldReturnResponseWithHeaders() {
-        Request request = new Request("OPTIONS", "/method_options", new HashMap<String, String>(), "");
+        Request request = new Request("POST", "/echo_body", new HashMap<String, String>(), "lorem ipsum dolor sit amet, adipiscing elit...");
         Response response = ResponseBuilder.buildResponse(request);
 
-        assertEquals("GET, HEAD, OPTIONS", response.headers().get("Allow"));
+        assertEquals("GET, OPTIONS, POST, HEAD", response.headers().get("Allow"));
+        assertEquals("46", response.headers().get("Content-Length"));
     }
 
     @Test

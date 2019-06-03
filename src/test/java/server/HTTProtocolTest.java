@@ -25,7 +25,7 @@ public class HTTProtocolTest {
         Client client = new Client(socket);
         HTTProtocol protocol = new HTTProtocol(client);
         protocol.run();
-        assertEquals("HTTP/1.1 200 OK\r\nAllow: GET, HEAD\r\n\r\n", socket.getOutputStream().toString());
+        assertEquals("HTTP/1.1 200 OK\r\nAllow: GET, OPTIONS, HEAD\r\n\r\n", socket.getOutputStream().toString());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class HTTProtocolTest {
         Client client = new Client(socket);
         HTTProtocol protocol = new HTTProtocol(client);
         protocol.run();
-        assertEquals("HTTP/1.1 200 OK\r\nAllow: GET, HEAD\r\n\r\n", socket.getOutputStream().toString());
+        assertEquals("HTTP/1.1 200 OK\r\nAllow: GET, OPTIONS, HEAD\r\n\r\n", socket.getOutputStream().toString());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class HTTProtocolTest {
         Client client = new Client(socket);
         HTTProtocol protocol = new HTTProtocol(client);
         protocol.run();
-        assertEquals("HTTP/1.1 200 OK\r\nAllow: GET, HEAD, OPTIONS\r\n\r\n", socket.getOutputStream().toString());
+        assertEquals("HTTP/1.1 200 OK\r\nContent-Length: 0\r\nAllow: GET, OPTIONS, HEAD\r\n\r\n", socket.getOutputStream().toString());
     }
 
     @Test
@@ -52,6 +52,6 @@ public class HTTProtocolTest {
         Client client = new Client(socket);
         HTTProtocol protocol = new HTTProtocol(client);
         protocol.run();
-        assertEquals("HTTP/1.1 200 OK\r\nAllow: GET, HEAD, OPTIONS, POST\r\n\r\nlorem ipsum dolor sit amet, adipiscing elit...", socket.getOutputStream().toString());
+        assertEquals("HTTP/1.1 200 OK\r\nContent-Length: 46\r\nAllow: GET, OPTIONS, POST, HEAD\r\n\r\nlorem ipsum dolor sit amet, adipiscing elit...", socket.getOutputStream().toString());
     }
 }
