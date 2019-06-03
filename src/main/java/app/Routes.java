@@ -1,4 +1,4 @@
-package server.router;
+package app;
 
 import java.util.Collections;
 import java.util.HashMap;

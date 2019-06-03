@@ -1,7 +1,8 @@
 package server.response;
 
+import app.App;
 import server.request.Request;
-import server.router.MethodApplier;
+import app.MethodApplier;
 import server.response.types.NotFoundResponse;
 import server.response.types.OKResponse;
 
@@ -10,11 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static server.router.Routes.ROUTES;
-
 public class ResponseBuilder {
-    public static Response buildResponse(Request request) {
-        Map<String, MethodApplier> route = ROUTES.get(request.path());
+    public static Response buildResponse(Request request, App app) {
+        Map<String, MethodApplier> route = app.routes().get(request.path());
 
         if (route != null) {
             String body = getBody(route, request);

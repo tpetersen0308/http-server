@@ -1,5 +1,6 @@
 package server;
 
+import app.App;
 import server.request.Request;
 import server.request.RequestParser;
 import server.response.Response;
@@ -13,16 +14,18 @@ public class HTTProtocol implements Runnable {
     private Client client;
     private BufferedReader in;
     private PrintWriter out;
+    private App app;
 
-    public HTTProtocol(Client client) {
+    public HTTProtocol(Client client, App app) {
         this.client = client;
         this.in = client.getInputStreamReader();
         this.out = client.getOutputStreamWriter();
+        this.app = app;
     }
 
     public void run() {
         Request request = RequestParser.parse(in);
-        Response response = ResponseBuilder.buildResponse(request);
+        Response response = ResponseBuilder.buildResponse(request, app);
         String parsedResponse = HTTPResponseFormatter.stringify(response);
         out.print(parsedResponse);
         out.flush();
