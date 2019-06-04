@@ -3,14 +3,12 @@ package server.response;
 import java.util.Map;
 
 public class Response {
-    private String statusCode;
-    private String reasonPhrase;
-    private Map<String, String> headers;
-    private String body;
+    protected String statusCode = "";
+    protected String reasonPhrase = "";
+    protected Map<String, String> headers;
+    protected String body;
 
-    public Response(String statusCode, String reasonPhrase, Map<String, String> headers, String body) {
-        this.statusCode = statusCode;
-        this.reasonPhrase = reasonPhrase;
+    public Response(Map<String, String> headers, String body) {
         this.headers = headers;
         this.body = body;
     }

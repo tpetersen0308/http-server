@@ -1,5 +1,7 @@
 package server.response;
 
+import java.util.Map;
+
 public class HTTPResponseFormatter {
 
     public static String stringify(Response response) {
@@ -11,14 +13,13 @@ public class HTTPResponseFormatter {
     }
 
     private static String stringifyHeaders(Response response) {
-
-        if(response.headers().size() > 0) {
-            return response.headers().toString()
-                    .replace("{", "")
-                    .replace("}", "")
-                    .replace("=", ": ") + ResponseComponents.CRLF;
-        } else {
-            return "";
+        StringBuilder headers = new StringBuilder();
+        for(Map.Entry<String, String> header : response.headers().entrySet()) {
+            headers.append(header.getKey());
+            headers.append(": ");
+            headers.append(header.getValue());
+            headers.append(ResponseComponents.CRLF);
         }
+        return headers.toString();
     }
 }
