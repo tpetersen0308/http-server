@@ -36,21 +36,24 @@ public class RequestParserTest {
 
     @Test
     public void shouldParseRequestMethod() {
-        Request parsedRequest = RequestParser.parse(in);
+        RequestParser requestParser = new RequestParser(in);
+        Request parsedRequest = requestParser.parse();
 
         assertEquals("GET", parsedRequest.method());
     }
 
     @Test
     public void shouldParseRequestPath() {
-        Request parsedRequest = RequestParser.parse(in);
+        RequestParser requestParser = new RequestParser(in);
+        Request parsedRequest = requestParser.parse();
 
         assertEquals("/redirect", parsedRequest.path());
     }
 
     @Test
     public void shouldParseRequestHeaders() {
-        Request parsedRequest = RequestParser.parse(in);
+        RequestParser requestParser = new RequestParser(in);
+        Request parsedRequest = requestParser.parse();
 
         assertEquals("Ruby", parsedRequest.headers().get("User-Agent"));
         assertEquals("close", parsedRequest.headers().get("Connection"));
@@ -60,7 +63,8 @@ public class RequestParserTest {
 
     @Test
     public void shouldParseRequestBody() {
-        Request parsedRequest = RequestParser.parse(in);
+        RequestParser requestParser = new RequestParser(in);
+        Request parsedRequest = requestParser.parse();
 
         assertEquals(requestBody, parsedRequest.body());
     }
