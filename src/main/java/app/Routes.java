@@ -1,8 +1,6 @@
 package app;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Routes {
@@ -11,27 +9,26 @@ public class Routes {
 
     public static final Map<String, Map<String, MethodApplier>> ROUTES;
     static {
+        Router router = new Router();
 
-        Map<String, Map<String, MethodApplier>> routes = new HashMap<String, Map<String, MethodApplier>>() {{
-            put ("/simple_get", new LinkedHashMap<String, MethodApplier>() {{
-                put("GET", Methods.SIMPLE_GET);
-                put("OPTIONS", Methods.SIMPLE_OPTIONS);
-            }});
-            put("/get_with_body", new LinkedHashMap<String, MethodApplier>() {{
-                put("GET", Methods.SIMPLE_GET);
-                put("OPTIONS", Methods.SIMPLE_OPTIONS);
-            }});
-            put("/method_options", new LinkedHashMap<String, MethodApplier>() {{
-                put("GET", Methods.SIMPLE_GET);
-                put("OPTIONS", Methods.SIMPLE_OPTIONS);
-            }});
-            put("/echo_body", new LinkedHashMap<String, MethodApplier>() {{
-                put("GET", Methods.SIMPLE_GET);
-                put("OPTIONS", Methods.SIMPLE_OPTIONS);
-                put("POST", Methods.ECHO_BODY);
-            }});
-        }};
+        router.addMethodToRoute("/simple_get", "GET", Methods.SIMPLE_GET);
+        router.addMethodToRoute("/simple_get", "OPTIONS", Methods.SIMPLE_OPTIONS);
 
-        ROUTES = Collections.unmodifiableMap(routes);
+        router.addMethodToRoute("/get_with_body", "GET", Methods.GET_WITH_BODY);
+        router.addMethodToRoute("/get_with_body", "OPTIONS", Methods.SIMPLE_OPTIONS);
+
+        router.addMethodToRoute("/method_options", "GET", Methods.SIMPLE_GET);
+        router.addMethodToRoute("/method_options", "OPTIONS", Methods.SIMPLE_OPTIONS);
+
+        router.addMethodToRoute("/method_options2", "GET", Methods.SIMPLE_GET);
+        router.addMethodToRoute("/method_options2", "OPTIONS", Methods.SIMPLE_OPTIONS);
+        router.addMethodToRoute("/method_options2", "POST", Methods.ECHO_BODY);
+        router.addMethodToRoute("/method_options2", "PUT", Methods.ECHO_BODY);
+
+        router.addMethodToRoute("/echo_body", "GET", Methods.SIMPLE_GET);
+        router.addMethodToRoute("/echo_body", "OPTIONS", Methods.SIMPLE_OPTIONS);
+        router.addMethodToRoute("/echo_body", "POST", Methods.ECHO_BODY);
+
+        ROUTES = Collections.unmodifiableMap(router.routes);
     }
 }

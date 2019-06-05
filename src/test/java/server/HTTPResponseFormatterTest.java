@@ -15,7 +15,8 @@ public class HTTPResponseFormatterTest {
     public void shouldReturnResponseParsedIntoString() {
         Map<String, String> headers = new HashMap() {{ put("Allow", "GET, HEAD, OPTIONS"); }};
         Response response = new OKResponse(headers, "lorem ipsum dolor sit amet, adipiscing elit...");
+        HTTPResponseFormatter formatter = new HTTPResponseFormatter(response);
 
-        assertEquals("HTTP/1.1 200 OK\r\nAllow: GET, HEAD, OPTIONS\r\n\r\nlorem ipsum dolor sit amet, adipiscing elit...", HTTPResponseFormatter.stringify(response));
+        assertEquals("HTTP/1.1 200 OK\r\nAllow: GET, HEAD, OPTIONS\r\n\r\nlorem ipsum dolor sit amet, adipiscing elit...", formatter.stringifyResponse());
     }
 }

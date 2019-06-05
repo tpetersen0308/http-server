@@ -6,18 +6,23 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class RequestParser {
+    private BufferedReader in;
 
-    public static Request parse(BufferedReader in) {
-        String requestLine = parseRequestLine(in);
+    public RequestParser(BufferedReader in) {
+        this.in = in;
+    }
+
+    public Request parse() {
+        String requestLine = parseRequestLine();
         String requestMethod = parseRequestMethod(requestLine);
         String requestPath = parseRequestPath(requestLine);
-        Map<String, String> requestHeaders = parseRequestHeaders(in);
-        String requestBody = parseRequestBody(in, requestHeaders);
+        Map<String, String> requestHeaders = parseRequestHeaders();
+        String requestBody = parseRequestBody(requestHeaders);
 
         return new Request(requestMethod, requestPath, requestHeaders, requestBody);
     }
 
-    private static String parseRequestLine(BufferedReader in) {
+    private String parseRequestLine() {
         String requestLine = null;
         try {
             requestLine = in.readLine();
@@ -27,15 +32,15 @@ public class RequestParser {
         return requestLine;
     }
 
-    private static String parseRequestMethod(String requestLine) {
+    private String parseRequestMethod(String requestLine) {
         return requestLine.split(" ")[0].trim();
     }
 
-    private static String parseRequestPath(String requestLine) {
+    private String parseRequestPath(String requestLine) {
         return requestLine.split(" ")[1].trim();
     }
 
-    private static Map parseRequestHeaders(BufferedReader in) {
+    private Map parseRequestHeaders() {
         Map<String, String> requestHeaders = new HashMap<>();
         try {
             String header = in.readLine();
@@ -50,7 +55,7 @@ public class RequestParser {
         return requestHeaders;
     }
 
-    private static String parseRequestBody(BufferedReader in, Map requestHeaders) {
+    private String parseRequestBody(Map requestHeaders) {
         Integer contentLength = parseRequestBodyContentLength(requestHeaders);
         char[] requestBody = new char[contentLength];
 
@@ -62,7 +67,7 @@ public class RequestParser {
         return new String(requestBody);
     }
 
-    private static Integer parseRequestBodyContentLength(Map<String, String> requestHeaders) {
+    private Integer parseRequestBodyContentLength(Map<String, String> requestHeaders) {
         String contentLengthStr = requestHeaders.get("Content-Length");
         return contentLengthStr == null ? 0 : Integer.parseInt(contentLengthStr);
     }

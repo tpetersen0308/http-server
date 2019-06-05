@@ -24,11 +24,23 @@ public class HTTProtocol implements Runnable {
     }
 
     public void run() {
-        Request request = RequestParser.parse(in);
-        Response response = ResponseBuilder.buildResponse(request, app);
-        String parsedResponse = HTTPResponseFormatter.stringify(response);
-        out.print(parsedResponse);
+        Request request = getParsedRequest();
+        String response = getStringifiedResponse(request);
+
+        out.print(response);
         out.flush();
         client.closeSocket();
+    }
+
+    private Request getParsedRequest() {
+        RequestParser requestParser = new RequestParser(in);
+        return requestParser.parse();
+    }
+
+    private String getStringifiedResponse(Request request) {
+        ResponseBuilder responseBuilder = new ResponseBuilder(request, app.routes().get(request.path()));
+        Response response = responseBuilder.build();
+        HTTPResponseFormatter formatter = new HTTPResponseFormatter(response);
+        return formatter.stringifyResponse();
     }
 }

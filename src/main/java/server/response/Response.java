@@ -1,10 +1,10 @@
 package server.response;
 
+import java.util.Collections;
 import java.util.Map;
 
 public class Response {
-    protected String statusCode = "";
-    protected String reasonPhrase = "";
+    protected String status = "";
     protected Map<String, String> headers;
     protected String body;
 
@@ -13,12 +13,13 @@ public class Response {
         this.body = body;
     }
 
-    public String statusCode() {
-        return statusCode;
+    public Response() {
+        this.headers = Collections.emptyMap();
+        this.body = "";
     }
 
-    public String reasonPhrase() {
-        return reasonPhrase;
+    public String status() {
+        return status;
     }
 
     public Map<String, String> headers() {
