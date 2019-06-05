@@ -66,4 +66,13 @@ public class ResponseBuilderTest {
         assertEquals("", response.body());
         assertEquals("9", response.headers().get("Content-Length"));
     }
+
+    @Test
+    public void shouldReturnResponseWithNotAllowedStatusLine() {
+        Request request = new Request("GET", "/get_with_body", new HashMap<>(), "");
+        ResponseBuilder responseBuilder = new ResponseBuilder(request, app.routes().get(request.path()));
+        Response response = responseBuilder.build();
+
+        assertEquals("405 Method Not Allowed", response.status());
+    }
 }

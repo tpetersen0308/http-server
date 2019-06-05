@@ -4,13 +4,19 @@ import java.util.Collections;
 import java.util.Map;
 
 public class Response {
-    protected String status = "";
+    protected String status;
     protected Map<String, String> headers;
     protected String body;
 
     public Response(Map<String, String> headers, String body) {
+        this.status = "";
         this.headers = headers;
         this.body = body;
+    }
+
+    public Response(Map<String, String> headers) {
+        this.headers = headers;
+        this.body = "";
     }
 
     public Response() {
