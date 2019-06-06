@@ -1,7 +1,7 @@
 package server.response.types;
 
 import server.response.Response;
-import server.response.Status;
+import server.response.stringcomponents.Status;
 
 import java.util.Map;
 

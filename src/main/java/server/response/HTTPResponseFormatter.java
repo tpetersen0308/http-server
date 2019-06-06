@@ -1,5 +1,8 @@
 package server.response;
 
+import server.response.stringcomponents.HTTPVersion;
+import server.response.stringcomponents.WhiteSpace;
+
 import java.util.Map;
 
 public class HTTPResponseFormatter {
@@ -10,11 +13,11 @@ public class HTTPResponseFormatter {
     }
 
     public String stringifyResponse() {
-        return stringifyStatusLine()+ ResponseComponents.CRLF + stringifyHeaders() + ResponseComponents.CRLF + response.body();
+        return stringifyStatusLine()+ WhiteSpace.CRLF + stringifyHeaders() + WhiteSpace.CRLF + response.body();
     }
 
     private String stringifyStatusLine() {
-        return ResponseComponents.HTTP_VERSION + ResponseComponents.SP + response.status();
+        return HTTPVersion.HTTP_VERSION + WhiteSpace.SP + response.status();
     }
 
     private String stringifyHeaders() {
@@ -23,7 +26,7 @@ public class HTTPResponseFormatter {
             headers.append(header.getKey());
             headers.append(": ");
             headers.append(header.getValue());
-            headers.append(ResponseComponents.CRLF);
+            headers.append(WhiteSpace.CRLF);
         }
         return headers.toString();
     }
