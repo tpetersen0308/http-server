@@ -1,18 +1,19 @@
 package server;
 
-import app.App;
+import app.support.App;
 import app.Routes;
 import org.junit.Before;
 import org.junit.Test;
 import server.request.Request;
 import server.response.Response;
-import server.response.ResponseBuilder;
+import server.response.ResponseSelector;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
+import java.util.Map;
 
-public class ResponseBuilderTest {
+public class ResponseSelectorTest {
     App app;
 
     @Before
@@ -23,8 +24,8 @@ public class ResponseBuilderTest {
     @Test
     public void shouldReturnResponseWithOKStatus() {
         Request request = new Request("GET", "/simple_get", new HashMap<>(), "");
-        ResponseBuilder responseBuilder = new ResponseBuilder(request, app.routes().get(request.path()));
-        Response response = responseBuilder.build();
+        ResponseSelector responseSelector = new ResponseSelector(request, app);
+        Response response = responseSelector.selectResponse();
 
         assertEquals("200 OK", response.status());
     }
@@ -32,8 +33,8 @@ public class ResponseBuilderTest {
     @Test
     public void shouldReturnResponseWithNotFoundStatusLine() {
         Request request = new Request("GET", "/not_found_resource", new HashMap<>(), "");
-        ResponseBuilder responseBuilder = new ResponseBuilder(request, app.routes().get(request.path()));
-        Response response = responseBuilder.build();
+        ResponseSelector responseSelector = new ResponseSelector(request, app);
+        Response response = responseSelector.selectResponse();
 
         assertEquals("404 Not Found", response.status());
     }
@@ -41,8 +42,8 @@ public class ResponseBuilderTest {
     @Test
     public void shouldReturnResponseWithHeaders() {
         Request request = new Request("POST", "/echo_body", new HashMap<>(), "lorem ipsum dolor sit amet, adipiscing elit...");
-        ResponseBuilder responseBuilder = new ResponseBuilder(request, app.routes().get(request.path()));
-        Response response = responseBuilder.build();
+        ResponseSelector responseSelector = new ResponseSelector(request, app);
+        Response response = responseSelector.selectResponse();
 
         assertEquals("GET, HEAD, OPTIONS, POST", response.headers().get("Allow"));
         assertEquals("46", response.headers().get("Content-Length"));
@@ -51,8 +52,8 @@ public class ResponseBuilderTest {
     @Test
     public void shouldReturnResponseWithBody() {
         Request request = new Request("POST", "/echo_body", new HashMap<>(), "lorem ipsum dolor sit amet, adipiscing elit...");
-        ResponseBuilder responseBuilder = new ResponseBuilder(request, app.routes().get(request.path()));
-        Response response = responseBuilder.build();
+        ResponseSelector responseSelector = new ResponseSelector(request, app);
+        Response response = responseSelector.selectResponse();
 
         assertEquals("lorem ipsum dolor sit amet, adipiscing elit...", response.body());
     }
@@ -60,19 +61,30 @@ public class ResponseBuilderTest {
     @Test
     public void shouldReturnResponseWithContentLengthHeaderForHeadRequest() {
         Request request = new Request("HEAD", "/get_with_body", new HashMap<>(), "");
-        ResponseBuilder responseBuilder = new ResponseBuilder(request, app.routes().get(request.path()));
-        Response response = responseBuilder.build();
+        ResponseSelector responseSelector = new ResponseSelector(request, app);
+        Response response = responseSelector.selectResponse();
 
-        assertEquals("", response.body());
         assertEquals("9", response.headers().get("Content-Length"));
     }
 
     @Test
     public void shouldReturnResponseWithNotAllowedStatusLine() {
         Request request = new Request("GET", "/get_with_body", new HashMap<>(), "");
-        ResponseBuilder responseBuilder = new ResponseBuilder(request, app.routes().get(request.path()));
-        Response response = responseBuilder.build();
+        ResponseSelector responseSelector = new ResponseSelector(request, app);
+        Response response = responseSelector.selectResponse();
 
         assertEquals("405 Method Not Allowed", response.status());
+    }
+
+    @Test
+    public void shouldReturnMovedPermanentlyResponse() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Host", "127.0.0.1:5000");
+        Request request = new Request("GET", "/redirect", headers, "");
+        ResponseSelector responseSelector = new ResponseSelector(request, app);
+        Response response = responseSelector.selectResponse();
+
+        assertEquals("301 Moved Permanently", response.status());
+        assertEquals("http://127.0.0.1:5000/simple_get", response.headers().get("Location"));
     }
 }
