@@ -1,3 +1,4 @@
 #!/bin/bash
 
+set -ex
 java -cp target/http-server-1.0-SNAPSHOT.jar server.Main ${1:-5000}

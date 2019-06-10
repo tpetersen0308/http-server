@@ -3,3 +3,8 @@ language: java
 jdk: openjdk12
 
 sudo: false
+
+script:
+  - mvn test
+  - ./bin/http_server &
+  - ./bin/ci/http_server_spec
