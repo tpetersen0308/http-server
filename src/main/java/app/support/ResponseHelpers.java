@@ -4,13 +4,11 @@ import app.Routes;
 import server.request.Request;
 import server.response.Response;
 import server.response.stringcomponents.HTTPMethods;
-import server.response.stringcomponents.HeaderFields;
 import server.response.stringcomponents.Status;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class ActionHelpers {
+public class ResponseHelpers {
     public static Response renderWithHeaders(Request request, String body, Map<String, String> headers) {
         Response result = render(request, body);
         return new Response.Builder(result).withCustomHeaders(headers).build();

@@ -1,7 +1,7 @@
 package app;
 
-import app.support.ActionDispatcher;
-import app.support.ActionHelpers;
+import app.support.ResponseHandler;
+import app.support.ResponseHelpers;
 import org.junit.Test;
 import server.request.Request;
 import server.response.Response;
@@ -11,12 +11,12 @@ import static org.junit.Assert.assertEquals;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ActionHelpersTest {
+public class ResponseHelpersTest {
     @Test
     public void shouldBuildA200OKResponse() {
-        ActionDispatcher actionDispatcher = (Request request) -> ActionHelpers.render(request, "some body");
+        ResponseHandler responseHandler = (Request request) -> ResponseHelpers.render(request, "some body");
         Request request = new Request("GET", "/simple_get", new HashMap<>(), "");
-        Response response = actionDispatcher.dispatch(request);
+        Response response = responseHandler.dispatch(request);
 
         assertEquals("200 OK", response.status());
         assertEquals("9", response.headers().get("Content-Length"));
@@ -25,12 +25,12 @@ public class ActionHelpersTest {
 
     @Test
     public void shouldBuildA301MovedPermanentlyResponse() {
-        ActionDispatcher actionDispatcher = (Request request) -> ActionHelpers.redirectTo(request, "/simple_get");
+        ResponseHandler responseHandler = (Request request) -> ResponseHelpers.redirectTo(request, "/simple_get");
         Map<String, String> headers = new HashMap<>();
         headers.put("Host", "127.0.0.1:5000");
         Request request = new Request("GET", "/redirect", headers, "");
 
-        Response response = actionDispatcher.dispatch(request);
+        Response response = responseHandler.dispatch(request);
 
         assertEquals("301 Moved Permanently", response.status());
         assertEquals("http://127.0.0.1:5000/simple_get", response.headers().get("Location"));
@@ -39,10 +39,10 @@ public class ActionHelpersTest {
     @Test
     public void shouldBuildAResponseWithCustomHeaders() {
         Map<String, String> customHeaders = new HashMap<String, String>() {{ put("custom", "header");}};
-        ActionDispatcher actionDispatcher = (Request request) -> ActionHelpers.renderWithHeaders(request,"", customHeaders);
+        ResponseHandler responseHandler = (Request request) -> ResponseHelpers.renderWithHeaders(request,"", customHeaders);
         Request request = new Request("GET", "/simple_get", new HashMap<>(), "");
 
-        Response response = actionDispatcher.dispatch(request);
+        Response response = responseHandler.dispatch(request);
 
         assertEquals("header", response.headers().get("custom"));
     }

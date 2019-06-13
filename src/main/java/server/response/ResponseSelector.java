@@ -1,7 +1,7 @@
 package server.response;
 
 import app.support.App;
-import app.support.ActionDispatcher;
+import app.support.ResponseHandler;
 import server.request.Request;
 import server.response.stringcomponents.Status;
 
@@ -9,21 +9,23 @@ import java.util.Map;
 
 public class ResponseSelector {
     private Request request;
-    private Map<String, ActionDispatcher> route;
+    private Map<String, ResponseHandler> route;
+    private Response.Builder responseBuilder;
 
     public ResponseSelector(Request request, App app) {
         this.request = request;
         this.route = app.routes().get(request.path());
+        this.responseBuilder = new Response.Builder();
     }
 
     public Response selectResponse() {
         if (!isRouteFound())
-            return new Response.Builder()
+            return responseBuilder
                 .withStatus(Status.NOT_FOUND)
                 .build();
 
         if(!isMethodAllowed())
-            return new Response.Builder()
+            return responseBuilder
                 .withStatus(Status.METHOD_NOT_ALLOWED)
                 .withAllowHeader(route)
                 .build();

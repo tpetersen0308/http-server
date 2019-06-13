@@ -1,6 +1,6 @@
 package server.response;
 
-import app.support.ActionDispatcher;
+import app.support.ResponseHandler;
 import server.request.Request;
 import server.response.stringcomponents.HTTP;
 import server.response.stringcomponents.HeaderFields;
@@ -37,7 +37,7 @@ public class Response {
         private String body;
 
         public Builder(Response response) {
-            this.response = response;
+            this.response = new Response();
             this.status = response.status;
             this.headers = response.headers;
             this.body = response.body;
@@ -55,7 +55,7 @@ public class Response {
             return this;
         }
 
-        public Builder withAllowHeader(Map<String, ActionDispatcher> route) {
+        public Builder withAllowHeader(Map<String, ResponseHandler> route) {
             Set<String> methodSet = route.keySet();
             String[] allowedMethods = methodSet.toArray(new String[methodSet.size()]);
             this.headers.put(HeaderFields.ALLOWED_METHODS, String.join(", ", allowedMethods));
