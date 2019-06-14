@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -ex
+gem install bundler
+git clone https://github.com/tpetersen0308/http-server-spec.git
+cd http-server-spec && bundle install
+bundle exec spinach
