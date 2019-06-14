@@ -1,11 +1,11 @@
 package server;
 
-import app.App;
+import app.support.App;
 import server.request.Request;
 import server.request.RequestParser;
-import server.response.Response;
-import server.response.ResponseBuilder;
 import server.response.HTTPResponseFormatter;
+import server.response.Response;
+import server.response.ResponseSelector;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
@@ -38,8 +38,8 @@ public class HTTProtocol implements Runnable {
     }
 
     private String getStringifiedResponse(Request request) {
-        ResponseBuilder responseBuilder = new ResponseBuilder(request, app.routes().get(request.path()));
-        Response response = responseBuilder.build();
+        ResponseSelector responseSelector = new ResponseSelector(request, app);
+        Response response = responseSelector.selectResponse();
         HTTPResponseFormatter formatter = new HTTPResponseFormatter(response);
         return formatter.stringifyResponse();
     }

@@ -1,6 +1,6 @@
 package server;
 
-import app.App;
+import app.support.App;
 import app.Routes;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,5 +80,14 @@ public class HTTProtocolTest {
         HTTProtocol protocol = new HTTProtocol(client, app);
         protocol.run();
         assertEquals("HTTP/1.1 405 Method Not Allowed\r\nAllow: HEAD, OPTIONS\r\n\r\n", socket.getOutputStream().toString());
+    }
+
+    @Test
+    public void shouldReturnMovedPermanently() throws IOException {
+        SocketStub socket = new SocketStub("GET /redirect HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n");
+        Client client = new Client(socket);
+        HTTProtocol protocol = new HTTProtocol(client, app);
+        protocol.run();
+        assertEquals("HTTP/1.1 301 Moved Permanently\r\nLocation: http://127.0.0.1:5000/simple_get\r\n\r\n", socket.getOutputStream().toString());
     }
 }

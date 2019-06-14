@@ -1,6 +1,6 @@
 package server;
 
-import app.App;
+import app.support.App;
 
 import java.io.IOException;
 import java.net.ServerSocket;

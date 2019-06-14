@@ -1,6 +1,6 @@
 package server.response;
 
-import server.response.stringcomponents.HTTPVersion;
+import server.response.stringcomponents.HTTP;
 import server.response.stringcomponents.WhiteSpace;
 
 import java.util.Map;
@@ -17,7 +17,7 @@ public class HTTPResponseFormatter {
     }
 
     private String stringifyStatusLine() {
-        return HTTPVersion.HTTP_VERSION + WhiteSpace.SP + response.status();
+        return HTTP.VERSION + WhiteSpace.SP + response.status();
     }
 
     private String stringifyHeaders() {
