@@ -1,10 +1,13 @@
 package server.response;
 
 import app.support.App;
+import app.support.Directory;
 import app.support.ResponseHandler;
+import app.support.ResponseHelpers;
 import server.request.Request;
 import server.response.stringcomponents.Status;
 
+import java.io.File;
 import java.util.Map;
 
 public class ResponseSelector {
@@ -19,7 +22,12 @@ public class ResponseSelector {
     }
 
     public Response selectResponse() {
-        if (!isRouteFound())
+        File directoryFile = new File(Directory.PATH + request.path());
+
+        if(directoryFile.exists())
+            return ResponseHelpers.renderDirectory(request, directoryFile.getPath());
+
+        if(!isRouteFound())
             return responseBuilder
                 .withStatus(Status.NOT_FOUND)
                 .build();
