@@ -2,7 +2,7 @@ package server;
 
 import app.support.App;
 import app.Routes;
-import app.support.Directory;
+import app.support.DefaultDirectory;
 import org.junit.Before;
 import org.junit.Test;
 import server.request.Request;
@@ -93,21 +93,34 @@ public class ResponseSelectorTest {
     @Test
     public void shouldReturnResponseWithDirectory() {
         Request request = new Request("GET", "/", new HashMap<>(), "");
-        String directory = "./src/test/java/stubs/app/public_stub";
-        String absDirectory = new File(directory).getAbsolutePath();
-        Directory.setPath(absDirectory);
+        String path = "./src/test/java/stubs/app/public_stub";
+        DefaultDirectory.setPath(path);
         ResponseSelector responseSelector = new ResponseSelector(request, app);
         Response response = responseSelector.selectResponse();
         String expectedBody = "<h1>Index</h1>" +
-                "<h3>public_stub</h3>" +
-                "<ul>" +
-                "<li><a href='/foo.txt'>foo.txt</a></li>" +
-                "<li><a href='/hello_world.html'>hello_world.html</a></li>" +
-                "<li><a href='/more_stuff'>more_stuff</a></li>" +
-                "<li><a href='/other_stuff'>other_stuff</a></li>" +
-                "</ul>";
+            "<h3>public_stub</h3>" +
+            "<ul>" +
+            "<li><a href='/.DS_Store'>.DS_Store</a></li>" +
+            "<li><a href='/foo.txt'>foo.txt</a></li>" +
+            "<li><a href='/hello_world.html'>hello_world.html</a></li>" +
+            "<li><a href='/more_stuff'>more_stuff</a></li>" +
+            "<li><a href='/other_stuff'>other_stuff</a></li>" +
+            "<li><a href='/so_rich.rtf'>so_rich.rtf</a></li>" +
+            "</ul>";
 
         assertEquals("text/html; charset=utf-8", response.headers().get("Content-Type"));
         assertEquals(expectedBody, response.body());
+    }
+
+    @Test
+    public void shouldReturnResponseWithTextFileContentsInBody() {
+        Request request = new Request("GET", "/other_stuff/orange/youglad/i_didnt.txt", new HashMap<>(), "");
+        String path = "./src/test/java/stubs/app/public_stub";
+        DefaultDirectory.setPath(path);
+        ResponseSelector responseSelector = new ResponseSelector(request, app);
+        Response response = responseSelector.selectResponse();
+
+        assertEquals("say banana?", response.body());
+        assertEquals("text/plain; charset=utf-8", response.headers().get("Content-Type"));
     }
 }

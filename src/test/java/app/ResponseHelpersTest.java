@@ -1,5 +1,6 @@
 package app;
 
+import app.support.DefaultDirectory;
 import app.support.ResponseHelpers;
 import org.junit.Test;
 import server.request.Request;
@@ -48,17 +49,68 @@ public class ResponseHelpersTest {
         String directory = "./src/test/java/stubs/app/public_stub";
         String path = new File(directory).getAbsolutePath();
         String expectedBody = "<h1>Index</h1>" +
-                "<h3>public_stub</h3>" +
-                "<ul>" +
-                "<li><a href='/foo.txt'>foo.txt</a></li>" +
-                "<li><a href='/hello_world.html'>hello_world.html</a></li>" +
-                "<li><a href='/more_stuff'>more_stuff</a></li>" +
-                "<li><a href='/other_stuff'>other_stuff</a></li>" +
-                "</ul>";
+            "<h3>public_stub</h3>" +
+            "<ul>" +
+            "<li><a href='/.DS_Store'>.DS_Store</a></li>" +
+            "<li><a href='/foo.txt'>foo.txt</a></li>" +
+            "<li><a href='/hello_world.html'>hello_world.html</a></li>" +
+            "<li><a href='/more_stuff'>more_stuff</a></li>" +
+            "<li><a href='/other_stuff'>other_stuff</a></li>" +
+            "<li><a href='/so_rich.rtf'>so_rich.rtf</a></li>" +
+            "</ul>";
 
         Response response = ResponseHelpers.renderDirectory(request, path);
 
         assertEquals(expectedBody, response.body());
         assertEquals("text/html; charset=utf-8", response.headers().get("Content-Type"));
+    }
+
+    @Test
+    public void shouldBuildAResponseWithTextFileContents() {
+        Request request = new Request("GET", "/other_stuff/orange/youglad/i_didnt.txt", new HashMap<>(), "");
+        String path = "./src/test/java/stubs/app/public_stub";
+        DefaultDirectory.setPath(path);
+        Response response = ResponseHelpers.renderTextFile(request, DefaultDirectory.PATH + request.path());
+
+        assertEquals("say banana?", response.body());
+        assertEquals("text/plain; charset=utf-8", response.headers().get("Content-Type"));
+    }
+
+    @Test
+    public void shouldBuildAResponseWithHTMLFileContents() {
+        Request request = new Request("GET", "/hello_world.html", new HashMap<>(), "");
+        String path = "./src/test/java/stubs/app/public_stub";
+        DefaultDirectory.setPath(path);
+        Response response = ResponseHelpers.renderTextFile(request, DefaultDirectory.PATH + request.path());
+
+        assertEquals("<h1>Hello, World!</h1>", response.body());
+        assertEquals("text/html; charset=utf-8", response.headers().get("Content-Type"));
+    }
+
+    @Test
+    public void shouldBuildAResponseWithJSONFileContents() {
+        Request request = new Request("GET", "/more_stuff/bird.json", new HashMap<>(), "");
+        String path = "./src/test/java/stubs/app/public_stub";
+        DefaultDirectory.setPath(path);
+        Response response = ResponseHelpers.renderTextFile(request, DefaultDirectory.PATH + request.path());
+        String expectedJSON = "{\n" +
+                "  \"name\": \"Cedar Waxwing\",\n" +
+                "  \"scientific name\": \"Bombycilla Cedrorum\"\n" +
+                "}";
+
+        assertEquals(expectedJSON, response.body());
+        assertEquals("application/json; charset=utf-8", response.headers().get("Content-Type"));
+    }
+
+    @Test
+    public void shouldBuildAPlainTextResponseByDefault() {
+        Request request = new Request("GET", "/so_rich.rtf", new HashMap<>(), "");
+        String path = "./src/test/java/stubs/app/public_stub";
+        DefaultDirectory.setPath(path);
+        Response response = ResponseHelpers.renderTextFile(request, DefaultDirectory.PATH + request.path());
+        String expectedBody =  "{\\rtf1\\ansi{\\fonttbl\\f0\\fswiss Helvetica;}\\f0\\pardThis is some {\\b bold} text.\\par}";
+
+        assertEquals(expectedBody, response.body());
+        assertEquals("text/plain; charset=utf-8", response.headers().get("Content-Type"));
     }
 }

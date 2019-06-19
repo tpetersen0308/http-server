@@ -2,10 +2,12 @@ package server.response;
 
 import app.support.ResponseHandler;
 import server.request.Request;
+import server.response.stringcomponents.ContentTypes;
 import server.response.stringcomponents.HTTP;
 import server.response.stringcomponents.HeaderFields;
 import server.response.stringcomponents.WhiteSpace;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -77,8 +79,8 @@ public class Response {
             return this;
         }
 
-        public Builder withContentTypeHeader(String contentType) {
-            this.headers.put(HeaderFields.CONTENT_TYPE, contentType);
+        public Builder withContentTypeHeader(File file) {
+            this.headers.put(HeaderFields.CONTENT_TYPE, getContentType(file));
 
             return this;
         }
@@ -114,6 +116,23 @@ public class Response {
             Set<String> methodSet = route.keySet();
             String[] allowedMethods = methodSet.toArray(new String[methodSet.size()]);
             return String.join(", ", allowedMethods);
+        }
+
+        private String getContentType(File file) {
+            String extension = getFileExtension(file);
+            String contentType = ContentTypes.HEADER_VALUES.get(extension);
+            if(contentType == null)
+                return ContentTypes.HEADER_VALUES.get("");
+            return contentType;
+        }
+
+        private String getFileExtension(File file) {
+            String name = file.getName();
+            int lastIndexOf = name.lastIndexOf(".");
+            if (lastIndexOf == -1) {
+                return ""; // empty extension
+            }
+            return name.substring(lastIndexOf);
         }
     }
 }

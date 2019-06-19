@@ -5,18 +5,40 @@ import server.request.Request;
 import server.response.Response;
 import server.response.stringcomponents.HTTPMethods;
 import server.response.stringcomponents.Status;
+import server.response.stringcomponents.WhiteSpace;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 public class ResponseHelpers {
     private static Map<String, Map<String, ResponseHandler>> routes = Routes.ROUTES;
+
+    public static Response renderTextFile(Request request, String path) {
+        String fileContents = WhiteSpace.EMPTY_BODY;
+        Path filePath = Paths.get(path);
+
+        try {
+            fileContents = new String(Files.readAllBytes(filePath));
+        } catch (IOException err) {
+            System.out.println(err);
+        }
+
+        Response response = render(request, fileContents);
+        return new Response.Builder(response)
+            .withContentTypeHeader(new File(path))
+            .build();
+    }
 
     public static Response renderDirectory(Request request, String path) {
         String directoryHTML = new DirectoryIndex(path).toHTML();
         Response response = render(request, directoryHTML);
 
         return new Response.Builder(response)
-            .withContentTypeHeader("text/html; charset=utf-8")
+            .withContentTypeHeader(new File(".html"))
             .build();
     }
 

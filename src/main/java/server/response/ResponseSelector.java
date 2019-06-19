@@ -1,7 +1,7 @@
 package server.response;
 
 import app.support.App;
-import app.support.Directory;
+import app.support.DefaultDirectory;
 import app.support.ResponseHandler;
 import app.support.ResponseHelpers;
 import server.request.Request;
@@ -22,15 +22,9 @@ public class ResponseSelector {
     }
 
     public Response selectResponse() {
-        File directoryFile = new File(Directory.PATH + request.path());
-
-        if(directoryFile.exists())
-            return ResponseHelpers.renderDirectory(request, directoryFile.getPath());
-
-        if(!isRouteFound())
-            return responseBuilder
-                .withStatus(Status.NOT_FOUND)
-                .build();
+        if(!isRouteFound()){
+            return selectWithoutRoute();
+        }
 
         if(!isMethodAllowed())
             return responseBuilder
@@ -47,5 +41,21 @@ public class ResponseSelector {
 
     private Boolean isMethodAllowed() {
         return route.get(request.method()) != null;
+    }
+
+    private Response selectWithoutRoute() {
+        File directoryFile = new File(DefaultDirectory.PATH + request.path());
+
+        if(directoryFile.exists())
+            return selectFromDirectory(directoryFile);
+        return responseBuilder
+            .withStatus(Status.NOT_FOUND)
+            .build();
+    }
+
+    private Response selectFromDirectory(File file) {
+        if(file.isFile())
+            return ResponseHelpers.renderTextFile(request, file.getPath());
+        return ResponseHelpers.renderDirectory(request, file.getPath());
     }
 }
