@@ -10,13 +10,13 @@ import server.response.ResponseSelector;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 
-public class HTTProtocol implements Runnable {
+public class Protocol implements Runnable {
     private Client client;
     private BufferedReader in;
     private PrintWriter out;
     private App app;
 
-    public HTTProtocol(Client client, App app) {
+    public Protocol(Client client, App app) {
         this.client = client;
         this.in = client.getInputStreamReader();
         this.out = client.getOutputStreamWriter();

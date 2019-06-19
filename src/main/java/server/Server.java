@@ -20,7 +20,7 @@ public class Server {
         while (true) {
             Socket clientSocket = socket.accept();
             Client client = new Client(clientSocket);
-            HTTProtocol protocol = new HTTProtocol(client, app);
+            Protocol protocol = new Protocol(client, app);
             (new Thread(protocol)).start();
         }
     }
