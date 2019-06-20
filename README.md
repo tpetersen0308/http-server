@@ -28,4 +28,4 @@ and follow the instructions to set the port and default directory,
 
 or
 
-`java -cp target/http-server-1.0-SNAPSHOT.jar server.Main <PORT> <DIRECTORY>`
+`java -cp target/http-server-1.0-SNAPSHOT.jar app.Main <PORT> <DIRECTORY>`

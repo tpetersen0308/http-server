@@ -1,16 +1,14 @@
-package server;
+package server.request;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+import server.Client;
 import server.request.Request;
 import server.request.RequestParser;
 import stubs.server.SocketStub;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 public class RequestParserTest {
     String request;
@@ -18,7 +16,7 @@ public class RequestParserTest {
     String requestBody;
     String requestHeaders;
     SocketStub socket;
-    BufferedReader in;
+    Client client;
 
     @Before
     public void stubRequest() {
@@ -31,12 +29,12 @@ public class RequestParserTest {
     @Before
     public void setupInputStreamReader() {
         socket = new SocketStub(request);
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        client = new Client(socket);
     }
 
     @Test
     public void shouldParseRequestMethod() {
-        RequestParser requestParser = new RequestParser(in);
+        RequestParser requestParser = new RequestParser(client);
         Request parsedRequest = requestParser.parse();
 
         assertEquals("GET", parsedRequest.method());
@@ -44,7 +42,7 @@ public class RequestParserTest {
 
     @Test
     public void shouldParseRequestPath() {
-        RequestParser requestParser = new RequestParser(in);
+        RequestParser requestParser = new RequestParser(client);
         Request parsedRequest = requestParser.parse();
 
         assertEquals("/redirect", parsedRequest.path());
@@ -52,7 +50,7 @@ public class RequestParserTest {
 
     @Test
     public void shouldParseRequestHeaders() {
-        RequestParser requestParser = new RequestParser(in);
+        RequestParser requestParser = new RequestParser(client);
         Request parsedRequest = requestParser.parse();
 
         assertEquals("Ruby", parsedRequest.headers().get("User-Agent"));
@@ -63,7 +61,7 @@ public class RequestParserTest {
 
     @Test
     public void shouldParseRequestBody() {
-        RequestParser requestParser = new RequestParser(in);
+        RequestParser requestParser = new RequestParser(client);
         Request parsedRequest = requestParser.parse();
 
         assertEquals(requestBody, parsedRequest.body());

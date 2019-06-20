@@ -1,49 +1,48 @@
-package app.support;
+package server;
 
 import server.response.stringcomponents.*;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Router {
-    private Map<String, Map<String, ResponseHandler>> routes;
+    private Map<String, Map<String, RequestHandler>> routes;
 
     public Router() {
         this.routes = new HashMap<>();
     }
 
-    public Map<String, Map<String, ResponseHandler>> routes() {
+    public Map<String, Map<String, RequestHandler>> routes() {
         return routes;
     }
 
-    public void get(String path, ResponseHandler action) {
+    public void get(String path, RequestHandler action) {
         addRoute(path);
         routes.get(path).put(HTTPMethods.GET, action);
         head(path, action);
     }
 
-    public void head(String path, ResponseHandler action) {
+    public void head(String path, RequestHandler action) {
         addRoute(path);
         routes.get(path).put(HTTPMethods.HEAD, action);
     }
 
-    public void options(String path, ResponseHandler action) {
+    public void options(String path, RequestHandler action) {
         addRoute(path);
         routes.get(path).put(HTTPMethods.OPTIONS, action);
     }
 
-    public void post(String path, ResponseHandler action) {
+    public void post(String path, RequestHandler action) {
         addRoute(path);
         routes.get(path).put(HTTPMethods.POST, action);
     }
 
-    public void put(String path, ResponseHandler action) {
+    public void put(String path, RequestHandler action) {
         addRoute(path);
         routes.get(path).put(HTTPMethods.PUT, action);
     }
 
     private void addRoute(String path) {
-        routes.putIfAbsent(path, new LinkedHashMap<>());
+        routes.putIfAbsent(path, new HashMap<>());
     }
 }

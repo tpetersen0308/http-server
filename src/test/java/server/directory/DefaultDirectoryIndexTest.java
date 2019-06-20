@@ -1,7 +1,5 @@
-package app;
+package server.directory;
 
-import app.support.DefaultDirectory;
-import app.support.DirectoryIndex;
 import org.junit.Test;
 
 import java.io.File;
