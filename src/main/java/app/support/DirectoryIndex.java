@@ -36,7 +36,7 @@ public class DirectoryIndex {
         StringBuilder contentsList = new StringBuilder("<ul>");
 
         for(File file : sortedContents()) {
-            String href = file.getPath().replace(Directory.PATH, "");
+            String href = file.getPath().replace(DefaultDirectory.PATH, "");
             String filename = file.getName();
             contentsList.append(String.format("<li><a href='%s'>%s</a></li>", href, filename));
         }
