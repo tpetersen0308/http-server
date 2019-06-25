@@ -1,18 +1,20 @@
 package server;
 
 import server.request.Request;
-import server.request.RequestParser;
-import server.response.ResponseFormatter;
+import server.request.Parser;
+import server.response.Formatter;
 import server.response.Response;
-import server.response.ResponseSelector;
+import server.response.Selector;
+
+import java.io.IOException;
 
 public class ConnectionHandler implements Runnable {
     private Client client;
-    private RequestParser parser;
-    private ResponseSelector selector;
-    private ResponseFormatter formatter;
+    private Parser parser;
+    private Selector selector;
+    private Formatter formatter;
 
-    public ConnectionHandler(Client client, RequestParser parser, ResponseSelector selector, ResponseFormatter formatter) {
+    public ConnectionHandler(Client client, Parser parser, Selector selector, Formatter formatter) {
         this.client = client;
         this.parser = parser;
         this.selector = selector;
@@ -20,8 +22,14 @@ public class ConnectionHandler implements Runnable {
     }
 
     public void run() {
-        Request request = parser.parse();
-        Response response = selector.selectResponse(request);
+        Request request;
+        Response response;
+        try {
+            request = parser.parse();
+            response = selector.selectResponse(request);
+        } catch (IOException err) {
+            response = selector.selectResponse(err);
+        }
         sendResponse(response);
         client.closeSocket();
     }

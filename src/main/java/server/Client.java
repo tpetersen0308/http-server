@@ -1,5 +1,7 @@
 package server;
 
+import resources.Logger;
+
 import java.io.OutputStream;
 import java.net.Socket;
 import java.io.BufferedReader;
@@ -7,9 +9,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Client {
-    private Socket socket;
-    private BufferedReader inputStreamReader;
-    private OutputStream outputStream;
+    protected Socket socket;
+    protected BufferedReader inputStreamReader;
+    protected OutputStream outputStream;
+    private Logger logger = new Logger();
 
     public Client(Socket socket) {
         this.socket = socket;
@@ -17,24 +20,15 @@ public class Client {
         setOutputStream(socket);
     }
 
-    public String read() {
-        String content = "";
-        try {
-            content = in().readLine();
-        } catch (IOException err) {
-            System.out.println(err);
-        }
+    public String read() throws IOException {
+        String content = in().readLine();
 
         return content;
     }
 
-    public String read(int contentLength) {
+    public String read(int contentLength) throws IOException {
         char[] data = new char[contentLength];
-        try {
-            in().read(data, 0, contentLength);
-        } catch (IOException err) {
-            System.out.println(err);
-        }
+        in().read(data, 0, contentLength);
 
         return new String(data);
     }
@@ -43,7 +37,7 @@ public class Client {
         try {
             out().write(data);
         } catch (IOException err) {
-            System.out.println(err);
+            logger.log(err);
         }
     }
 
@@ -55,28 +49,28 @@ public class Client {
         try {
             out().flush();
             socket.close();
-        } catch (IOException e) {
-            System.err.println(e);
+        } catch (IOException err) {
+            logger.log(err);
         }
     }
 
-    private BufferedReader in() {
+    protected BufferedReader in() {
         return inputStreamReader;
     }
 
-    private void setInputStreamReader(Socket socket) {
+    protected void setInputStreamReader(Socket socket) {
         try {
             inputStreamReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException err) {
-            System.out.println(err);
+            logger.log(err);
         }
     }
 
-    private void setOutputStream(Socket socket) {
+    protected void setOutputStream(Socket socket) {
         try {
             outputStream = socket.getOutputStream();
         } catch (IOException err) {
-            System.out.println(err);
+            logger.log(err);
         }
     }
 }

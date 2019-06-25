@@ -1,7 +1,7 @@
 package server.response;
 
 import server.directory.DefaultDirectory;
-import server.RequestHandler;
+import server.request.Handler;
 import org.junit.Before;
 import org.junit.Test;
 import server.request.Request;
@@ -10,11 +10,12 @@ import stubs.server.RoutesStub;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResponseSelectorTest {
-    Map<String, Map<String, RequestHandler>> routes;
+public class SelectorTest {
+    Map<String, Map<String, Handler>> routes;
 
     @Before
     public void setup() {
@@ -24,8 +25,8 @@ public class ResponseSelectorTest {
     @Test
     public void shouldReturnOKResponse() {
         Request request = new Request("GET", "/test-route", new HashMap<>(), "");
-        ResponseSelector responseSelector = new ResponseSelector(routes);
-        Response response = responseSelector.selectResponse(request);
+        Selector selector = new Selector(routes);
+        Response response = selector.selectResponse(request);
 
         assertEquals("200 OK", response.status());
         assertEquals("GET, HEAD", response.headers().get("Allow"));
@@ -34,10 +35,28 @@ public class ResponseSelectorTest {
     }
 
     @Test
+    public void shouldReturnBadRequestResponseForInvalidMethod() {
+        Request request = new Request("", "/test-route", new HashMap<>(), "");
+        Selector selector = new Selector(routes);
+        Response response = selector.selectResponse(request);
+
+        assertEquals("400 Bad Request", response.status());
+    }
+
+    @Test
+    public void shouldReturnBadRequestResponseForInvalidPath() {
+        Request request = new Request("GET", "", new HashMap<>(), "");
+        Selector selector = new Selector(routes);
+        Response response = selector.selectResponse(request);
+
+        assertEquals("400 Bad Request", response.status());
+    }
+
+    @Test
     public void shouldReturnNotFoundResponse() {
         Request request = new Request("GET", "/not_found_resource", new HashMap<>(), "");
-        ResponseSelector responseSelector = new ResponseSelector(routes);
-        Response response = responseSelector.selectResponse(request);
+        Selector selector = new Selector(routes);
+        Response response = selector.selectResponse(request);
 
         assertEquals("404 Not Found", response.status());
     }
@@ -45,10 +64,18 @@ public class ResponseSelectorTest {
     @Test
     public void shouldReturnNotAllowedResponse() {
         Request request = new Request("POST", "/test-route", new HashMap<>(), "");
-        ResponseSelector responseSelector = new ResponseSelector(routes);
-        Response response = responseSelector.selectResponse(request);
+        Selector selector = new Selector(routes);
+        Response response = selector.selectResponse(request);
 
         assertEquals("405 Method Not Allowed", response.status());
+    }
+
+    @Test
+    public void shouldReturnInternalServerErrorResponse() {
+        Selector selector = new Selector(routes);
+        Response response = selector.selectResponse(new IOException());
+
+        assertEquals("500 Internal Server Error", response.status());
     }
 
     @Test
@@ -56,8 +83,8 @@ public class ResponseSelectorTest {
         Request request = new Request("GET", "/", new HashMap<>(), "");
         String path = "./src/test/java/stubs/app/public_stub";
         DefaultDirectory.setPath(path);
-        ResponseSelector responseSelector = new ResponseSelector(routes);
-        Response response = responseSelector.selectResponse(request);
+        Selector selector = new Selector(routes);
+        Response response = selector.selectResponse(request);
         String expectedBody = "<h1>Index</h1>" +
             "<h3>public_stub</h3>" +
             "<ul>" +
@@ -78,8 +105,8 @@ public class ResponseSelectorTest {
         Request request = new Request("GET", "/other_stuff/orange/youglad/i_didnt.txt", new HashMap<>(), "");
         String path = "./src/test/java/stubs/app/public_stub";
         DefaultDirectory.setPath(path);
-        ResponseSelector responseSelector = new ResponseSelector(routes);
-        Response response = responseSelector.selectResponse(request);
+        Selector selector = new Selector(routes);
+        Response response = selector.selectResponse(request);
 
         assertEquals("say banana?", new String(response.body()));
         assertEquals("text/plain; charset=utf-8", response.headers().get("Content-Type"));

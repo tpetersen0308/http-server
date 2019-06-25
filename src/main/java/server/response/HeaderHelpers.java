@@ -1,6 +1,6 @@
 package server.response;
 
-import server.RequestHandler;
+import server.request.Handler;
 import server.response.stringcomponents.ContentTypes;
 import server.response.stringcomponents.HTTP;
 
@@ -8,12 +8,12 @@ import java.io.File;
 import java.util.Map;
 import java.util.Set;
 
-public class ResponseHelpers {
-    private ResponseHelpers() {
+public class HeaderHelpers {
+    private HeaderHelpers() {
     }
 
-    public static String allowedMethods(Map<String, RequestHandler> route) {
-        if(route == null)
+    public static String allowedMethods(Map<String, Handler> route) {
+        if (route == null)
             return "GET, HEAD";
 
         Set<String> methodSet = route.keySet();
@@ -28,7 +28,7 @@ public class ResponseHelpers {
     public static String contentType(File file) {
         String extension = fileExtension(file);
         String contentType = ContentTypes.HEADER_VALUES.get(extension);
-        if(contentType == null)
+        if (contentType == null)
             return ContentTypes.HEADER_VALUES.get("");
         return contentType;
     }
@@ -36,9 +36,9 @@ public class ResponseHelpers {
     private static String fileExtension(File file) {
         String name = file.getName();
         int lastIndexOf = name.lastIndexOf(".");
-        if (lastIndexOf == -1) {
+        if (lastIndexOf == -1)
             return "";
-        }
+
         return name.substring(lastIndexOf);
     }
 }

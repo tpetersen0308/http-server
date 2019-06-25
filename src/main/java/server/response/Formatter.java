@@ -5,14 +5,14 @@ import server.response.stringcomponents.WhiteSpace;
 
 import java.util.Map;
 
-public class ResponseFormatter {
+public class Formatter {
     public byte[] statusLine(Response response) {
         return (HTTP.VERSION + WhiteSpace.SP + response.status() + WhiteSpace.CRLF).getBytes();
     }
 
     public byte[] headers(Response response) {
         StringBuilder headers = new StringBuilder();
-        for(Map.Entry<String, String> header : response.headers().entrySet()) {
+        for (Map.Entry<String, String> header : response.headers().entrySet()) {
             headers.append(header.getKey());
             headers.append(": ");
             headers.append(header.getValue());

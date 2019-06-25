@@ -1,9 +1,8 @@
-package server;
+package server.request;
 
-import server.request.Request;
 import server.response.Response;
 
 @FunctionalInterface
-public interface RequestHandler {
+public interface Handler {
     Response dispatch(Request request);
 }

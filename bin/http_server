@@ -1,9 +1,20 @@
 #!/bin/bash
 
-set -ex
-
 read -p "Please enter the port: " port
+
+while lsof -Pi :$port -sTCP:LISTEN -t >/dev/null
+do
+    pid=`lsof -Pi :$port -sTCP:LISTEN -t`
+    echo "Port $port is already in use by PID $pid."
+    read -p "Please enter another port: " port
+done
 
 read -p "Please enter the directory: " directory
 
-java -cp target/http-server-1.0-SNAPSHOT.jar app.Main $port $directory
+while test ! -d "$directory"
+do
+    echo "$directory is not a recognized directory."
+    read -p "Please enter another directory: " directory
+done
+
+java -jar target/http-server-1.0.jar $port $directory

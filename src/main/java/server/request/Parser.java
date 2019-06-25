@@ -1,18 +1,21 @@
 package server.request;
 
 import server.Client;
+import server.response.stringcomponents.HeaderFields;
+import server.response.stringcomponents.WhiteSpace;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 
-public class RequestParser {
+public class Parser {
     Client client;
 
-    public RequestParser(Client client) {
+    public Parser(Client client) {
         this.client = client;
     }
 
-    public Request parse() {
+    public Request parse() throws IOException {
         String requestLine = parseRequestLine();
         String requestMethod = parseRequestMethod(requestLine);
         String requestPath = parseRequestPath(requestLine);
@@ -23,23 +26,20 @@ public class RequestParser {
         return new Request(requestMethod, requestPath, requestHeaders, requestBody);
     }
 
-    private String parseRequestLine() {
-        return client.read();
+    private String parseRequestLine() throws IOException {
+        String requestLine = client.read();
+        return requestLine == null ? "" : requestLine;
     }
 
     private String parseRequestMethod(String requestLine) {
-        try {
-            return requestLine.split(" ")[0].trim();
-        } catch (NullPointerException err) {
-            return "";
-        }
+        return requestLine.split(WhiteSpace.SP)[0].trim();
     }
 
     private String parseRequestPath(String requestLine) {
-        return requestLine.split(" ")[1].trim();
+        return requestLine.isEmpty() ? "" : requestLine.split(WhiteSpace.SP)[1].trim();
     }
 
-    private Map<String, String> parseRequestHeaders() {
+    private Map<String, String> parseRequestHeaders() throws IOException {
         Map<String, String> requestHeaders = new HashMap<>();
         String header = client.read();
 
@@ -52,14 +52,14 @@ public class RequestParser {
         return requestHeaders;
     }
 
-    private String parseRequestBody(Map requestHeaders) {
+    private String parseRequestBody(Map requestHeaders) throws IOException {
         int contentLength = parseRequestBodyContentLength(requestHeaders);
 
         return client.read(contentLength);
     }
 
     private int parseRequestBodyContentLength(Map<String, String> requestHeaders) {
-        String contentLengthStr = requestHeaders.get("Content-Length");
+        String contentLengthStr = requestHeaders.get(HeaderFields.CONTENT_LENGTH);
         return contentLengthStr == null ? 0 : Integer.parseInt(contentLengthStr);
     }
 }

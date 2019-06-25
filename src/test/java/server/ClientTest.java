@@ -6,9 +6,11 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import stubs.server.SocketStub;
 
+import java.io.IOException;
+
 public class ClientTest {
     @Test
-    public void canRead() {
+    public void canRead() throws IOException {
         SocketStub socket = new SocketStub("echo");
         Client client = new Client(socket);
         String actual = client.read();
@@ -17,7 +19,7 @@ public class ClientTest {
     }
 
     @Test
-    public void canReadBasedOnContentLength() {
+    public void canReadBasedOnContentLength() throws IOException {
         SocketStub socket = new SocketStub("echo");
         Client client = new Client(socket);
         String actual = client.read(4);
