@@ -20,10 +20,12 @@ Create the project:
 
 `mvn package`
 
-Start the Server:
+Start the server with
 
-`./bin/http_server <PORT>` (Defaults to running on port 5000)
+`./bin/http_server`
+
+and follow the instructions to set the port and default directory,
 
 or
 
-`java -cp target/http-server-1.0-SNAPSHOT.jar server.Main <PORT>`
+`java -cp target/http-server-1.0-SNAPSHOT.jar server.Main <PORT> <DIRECTORY>`

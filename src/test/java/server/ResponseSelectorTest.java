@@ -2,6 +2,7 @@ package server;
 
 import app.support.App;
 import app.Routes;
+import app.support.Directory;
 import org.junit.Before;
 import org.junit.Test;
 import server.request.Request;
@@ -10,6 +11,7 @@ import server.response.ResponseSelector;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,5 +88,26 @@ public class ResponseSelectorTest {
 
         assertEquals("301 Moved Permanently", response.status());
         assertEquals("http://127.0.0.1:5000/simple_get", response.headers().get("Location"));
+    }
+
+    @Test
+    public void shouldReturnResponseWithDirectory() {
+        Request request = new Request("GET", "/", new HashMap<>(), "");
+        String directory = "./src/test/java/stubs/app/public_stub";
+        String absDirectory = new File(directory).getAbsolutePath();
+        Directory.setPath(absDirectory);
+        ResponseSelector responseSelector = new ResponseSelector(request, app);
+        Response response = responseSelector.selectResponse();
+        String expectedBody = "<h1>Index</h1>" +
+                "<h3>public_stub</h3>" +
+                "<ul>" +
+                "<li><a href='/foo.txt'>foo.txt</a></li>" +
+                "<li><a href='/hello_world.html'>hello_world.html</a></li>" +
+                "<li><a href='/more_stuff'>more_stuff</a></li>" +
+                "<li><a href='/other_stuff'>other_stuff</a></li>" +
+                "</ul>";
+
+        assertEquals("text/html; charset=utf-8", response.headers().get("Content-Type"));
+        assertEquals(expectedBody, response.body());
     }
 }

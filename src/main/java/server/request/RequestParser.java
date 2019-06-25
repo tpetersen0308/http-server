@@ -16,6 +16,7 @@ public class RequestParser {
         String requestLine = parseRequestLine();
         String requestMethod = parseRequestMethod(requestLine);
         String requestPath = parseRequestPath(requestLine);
+
         Map<String, String> requestHeaders = parseRequestHeaders();
         String requestBody = parseRequestBody(requestHeaders);
 
@@ -23,7 +24,7 @@ public class RequestParser {
     }
 
     private String parseRequestLine() {
-        String requestLine = null;
+        String requestLine = "";
         try {
             requestLine = in.readLine();
         } catch (IOException err) {

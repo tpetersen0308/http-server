@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import server.request.Request;
 import server.request.RequestParser;
-import server.stubs.SocketStub;
+import stubs.server.SocketStub;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

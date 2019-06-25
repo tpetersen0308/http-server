@@ -56,9 +56,7 @@ public class Response {
         }
 
         public Builder withAllowHeader(Map<String, ResponseHandler> route) {
-            Set<String> methodSet = route.keySet();
-            String[] allowedMethods = methodSet.toArray(new String[methodSet.size()]);
-            this.headers.put(HeaderFields.ALLOWED_METHODS, String.join(", ", allowedMethods));
+            this.headers.put(HeaderFields.ALLOWED_METHODS, getAllowedMethods(route));
 
             return this;
         }
@@ -75,6 +73,12 @@ public class Response {
             String location = HTTP.URL_PREFIX + host + path;
 
             this.headers.put(HeaderFields.LOCATION, location);
+
+            return this;
+        }
+
+        public Builder withContentTypeHeader(String contentType) {
+            this.headers.put(HeaderFields.CONTENT_TYPE, contentType);
 
             return this;
         }
@@ -101,6 +105,15 @@ public class Response {
             response.body = this.body;
 
             return response;
+        }
+
+        private String getAllowedMethods(Map<String, ResponseHandler> route) {
+            if(route == null)
+                return "GET, HEAD";
+
+            Set<String> methodSet = route.keySet();
+            String[] allowedMethods = methodSet.toArray(new String[methodSet.size()]);
+            return String.join(", ", allowedMethods);
         }
     }
 }

@@ -1,4 +1,9 @@
 #!/bin/bash
 
 set -ex
-java -cp target/http-server-1.0-SNAPSHOT.jar server.Main ${1:-5000}
+
+read -p "Please enter the port: " port
+
+read -p "Please enter the directory: " directory
+
+java -cp target/http-server-1.0-SNAPSHOT.jar server.Main $port $directory

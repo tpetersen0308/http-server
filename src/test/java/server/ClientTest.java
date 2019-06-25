@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.stubs.SocketStub;
+import stubs.server.SocketStub;
 
 import java.io.IOException;
 import java.io.PrintWriter;
