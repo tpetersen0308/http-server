@@ -5,6 +5,6 @@ jdk: openjdk12
 sudo: false
 
 script:
-  - mvn test
-  - ./bin/ci/http_server &
-  - ./bin/ci/http_server_spec
+- mvn test
+- ./bin/ci/http_server &
+- ./bin/ci/http_server_spec

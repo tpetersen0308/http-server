@@ -2,4 +2,4 @@
 
 set -ex
 
-java -cp target/http-server-1.0-SNAPSHOT.jar server.Main 5000 ./src/test/java/stubs/app/public_stub
+java -cp target/http-server-1.0-SNAPSHOT.jar app.Main 5000 ./src/test/java/stubs/app/public_stub

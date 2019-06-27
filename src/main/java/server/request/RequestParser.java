@@ -1,15 +1,15 @@
 package server.request;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import server.Client;
+
 import java.util.Map;
 import java.util.HashMap;
 
 public class RequestParser {
-    private BufferedReader in;
+    Client client;
 
-    public RequestParser(BufferedReader in) {
-        this.in = in;
+    public RequestParser(Client client) {
+        this.client = client;
     }
 
     public Request parse() {
@@ -24,51 +24,41 @@ public class RequestParser {
     }
 
     private String parseRequestLine() {
-        String requestLine = "";
-        try {
-            requestLine = in.readLine();
-        } catch (IOException err) {
-            System.err.println(err);
-        }
-        return requestLine;
+        return client.read();
     }
 
     private String parseRequestMethod(String requestLine) {
-        return requestLine.split(" ")[0].trim();
+        try {
+            return requestLine.split(" ")[0].trim();
+        } catch (NullPointerException err) {
+            return "";
+        }
     }
 
     private String parseRequestPath(String requestLine) {
         return requestLine.split(" ")[1].trim();
     }
 
-    private Map parseRequestHeaders() {
+    private Map<String, String> parseRequestHeaders() {
         Map<String, String> requestHeaders = new HashMap<>();
-        try {
-            String header = in.readLine();
-            while (header != null && !header.isEmpty()) {
-                String[] headerComponents = header.split(": ");
-                requestHeaders.put(headerComponents[0].trim(), headerComponents[1].trim());
-                header = in.readLine();
-            }
-        } catch (IOException err) {
-            System.err.println(err);
+        String header = client.read();
+
+        while (header != null && !header.isEmpty()) {
+            String[] headerComponents = header.split(": ");
+            requestHeaders.put(headerComponents[0].trim(), headerComponents[1].trim());
+            header = client.read();
         }
+
         return requestHeaders;
     }
 
     private String parseRequestBody(Map requestHeaders) {
-        Integer contentLength = parseRequestBodyContentLength(requestHeaders);
-        char[] requestBody = new char[contentLength];
+        int contentLength = parseRequestBodyContentLength(requestHeaders);
 
-        try {
-            in.read(requestBody, 0, contentLength);
-        } catch (IOException err) {
-            System.err.println(err);
-        }
-        return new String(requestBody);
+        return client.read(contentLength);
     }
 
-    private Integer parseRequestBodyContentLength(Map<String, String> requestHeaders) {
+    private int parseRequestBodyContentLength(Map<String, String> requestHeaders) {
         String contentLengthStr = requestHeaders.get("Content-Length");
         return contentLengthStr == null ? 0 : Integer.parseInt(contentLengthStr);
     }

@@ -1,61 +1,55 @@
 package server.response;
 
-import app.support.App;
-import app.support.DefaultDirectory;
-import app.support.ResponseHandler;
-import app.support.ResponseHelpers;
+import server.directory.DefaultDirectory;
+import server.RequestHandler;
 import server.request.Request;
-import server.response.stringcomponents.Status;
 
 import java.io.File;
 import java.util.Map;
 
 public class ResponseSelector {
-    private Request request;
-    private Map<String, ResponseHandler> route;
-    private Response.Builder responseBuilder;
+    private Map<String, Map<String, RequestHandler>> routes;
 
-    public ResponseSelector(Request request, App app) {
-        this.request = request;
-        this.route = app.routes().get(request.path());
-        this.responseBuilder = new Response.Builder();
+    public ResponseSelector(Map<String, Map<String, RequestHandler>> routes) {
+        this.routes = routes;
     }
 
-    public Response selectResponse() {
-        if(!isRouteFound()){
-            return selectWithoutRoute();
+    public Response selectResponse(Request request) {
+        Map<String, RequestHandler> route = getRoute(request);
+
+        if(!isRouteFound(request)){
+            return selectWithoutRoute(request);
         }
 
-        if(!isMethodAllowed())
-            return responseBuilder
-                .withStatus(Status.METHOD_NOT_ALLOWED)
-                .withAllowHeader(route)
-                .build();
+        if(!isMethodAllowed(request))
+            return ResponseTypes.methodNotAllowed(ResponseHelpers.allowedMethods(route));
 
-        return route.get(request.method()).dispatch(request);
+        return ResponseMethods.fromRoute(request, route);
     }
 
-    private Boolean isRouteFound() {
-        return route != null;
+    private Map<String, RequestHandler> getRoute(Request request) {
+        return routes.get(request.path());
     }
 
-    private Boolean isMethodAllowed() {
-        return route.get(request.method()) != null;
+    private boolean isRouteFound(Request request) {
+        return getRoute(request) != null;
     }
 
-    private Response selectWithoutRoute() {
+    private boolean isMethodAllowed(Request request) {
+        return getRoute(request).get(request.method()) != null;
+    }
+
+    private Response selectWithoutRoute(Request request) {
         File directoryFile = new File(DefaultDirectory.PATH + request.path());
 
         if(directoryFile.exists())
-            return selectFromDirectory(directoryFile);
-        return responseBuilder
-            .withStatus(Status.NOT_FOUND)
-            .build();
+            return selectFromDirectory(request, directoryFile);
+        return ResponseTypes.notFound();
     }
 
-    private Response selectFromDirectory(File file) {
+    private Response selectFromDirectory(Request request, File file) {
         if(file.isFile())
-            return ResponseHelpers.renderTextFile(request, file.getPath());
-        return ResponseHelpers.renderDirectory(request, file.getPath());
+            return ResponseMethods.renderFile(request, file.getPath());
+        return ResponseMethods.renderDirectory(request, file.getPath());
     }
 }

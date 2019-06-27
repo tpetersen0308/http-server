@@ -1,35 +1,37 @@
 package server;
 
+
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 import stubs.server.SocketStub;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.BufferedReader;
-
 public class ClientTest {
-    private Client client;
-    private SocketStub socket;
+    @Test
+    public void canRead() {
+        SocketStub socket = new SocketStub("echo");
+        Client client = new Client(socket);
+        String actual = client.read();
 
-    @Before
-    public void setupClient() throws IOException {
-        socket = new SocketStub("echo");
-        client = new Client(socket);
+        assertEquals("echo", actual);
     }
 
     @Test
-    public void canRead() throws IOException {
-        BufferedReader reader = client.getInputStreamReader();
-        assertEquals("echo", reader.readLine());
+    public void canReadBasedOnContentLength() {
+        SocketStub socket = new SocketStub("echo");
+        Client client = new Client(socket);
+        String actual = client.read(4);
+
+        assertEquals("echo", actual);
     }
 
     @Test
-    public void canWrite() throws IOException {
-        PrintWriter writer = client.getOutputStreamWriter();
-        writer.println("echo");
-        assertEquals("echo\n", socket.getOutputStream().toString());
+    public void canWrite() {
+        SocketStub socket = new SocketStub("");
+        Client client = new Client(socket);
+        byte[] outputString = "echo\r\n".getBytes();
+        client.write(outputString);
+
+        assertEquals("echo\r\n", socket.getOutputStream().toString());
     }
 }
