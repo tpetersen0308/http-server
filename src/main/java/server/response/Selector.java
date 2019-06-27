@@ -3,6 +3,7 @@ package server.response;
 import server.directory.DefaultDirectory;
 import server.request.Handler;
 import server.request.Request;
+import server.response.stringcomponents.HeaderFields;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class Selector {
         if (!isMethodAllowed(request))
             return Types.methodNotAllowed(HeaderHelpers.allowedMethods(route));
 
-        return Methods.fromRoute(request, route);
+        return selectFromRoute(request);
     }
 
     public Response selectResponse(IOException err) {
@@ -45,11 +46,23 @@ public class Selector {
     private Response selectFromDirectory(Request request, File file) {
         if (file.isFile())
             try {
-                return Methods.renderFile(request, file.getPath());
+                return Renderers.renderFile(request, file.getPath());
             } catch (IOException err) {
                 return Types.internalServerError();
             }
-        return Methods.renderDirectory(request, file.getPath());
+        return Renderers.renderDirectory(request, file.getPath());
+    }
+
+    private Response selectFromRoute(Request request) {
+        Response response;
+        try {
+            response = getRoute(request).get(request.method()).dispatch(request);
+        } catch (IOException err) {
+            return Types.internalServerError();
+        }
+        return new Response.Builder(response)
+            .withHeader(HeaderFields.ALLOWED_METHODS, HeaderHelpers.allowedMethods(getRoute(request)))
+            .build();
     }
 
     private boolean isBadRequest(Request request) {

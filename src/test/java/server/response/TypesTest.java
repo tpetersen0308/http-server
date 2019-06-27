@@ -11,6 +11,8 @@ public class TypesTest {
 
         assertEquals("200 OK", response.status());
         assertEquals("1", response.headers().get("Content-Length"));
+        assertEquals("text/plain; charset=utf-8", response.headers().get("Content-Type"));
+
     }
 
     @Test

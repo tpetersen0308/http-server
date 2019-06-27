@@ -53,6 +53,15 @@ public class SelectorTest {
     }
 
     @Test
+    public void shouldReturnInternalErrorWhenRoutingThrowsException() {
+        Request request = new Request("GET", "/error-route", new HashMap<>(), "");
+        Selector selector = new Selector(routes);
+        Response response = selector.selectResponse(request);
+
+        assertEquals("500 Internal Server Error", response.status());
+    }
+
+    @Test
     public void shouldReturnNotFoundResponse() {
         Request request = new Request("GET", "/not_found_resource", new HashMap<>(), "");
         Selector selector = new Selector(routes);
@@ -110,5 +119,16 @@ public class SelectorTest {
 
         assertEquals("say banana?", new String(response.body()));
         assertEquals("text/plain; charset=utf-8", response.headers().get("Content-Type"));
+    }
+
+    @Test
+    public void shouldBuildAResponseGivenARoute() {
+        Request request = new Request("GET", "/test-route", new HashMap<>(), "");
+        Selector selector = new Selector(routes);
+        Response response = selector.selectResponse(request);
+
+        assertEquals("200 OK", response.status());
+        assertEquals("9", response.headers().get("Content-Length"));
+        assertArrayEquals("test body".getBytes(), response.body());
     }
 }

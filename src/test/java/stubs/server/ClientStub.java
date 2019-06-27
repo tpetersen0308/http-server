@@ -8,8 +8,6 @@ import java.net.Socket;
 public class ClientStub extends Client {
     public ClientStub(Socket socket) {
         super(socket);
-        setInputStreamReader(socket);
-        setOutputStream(socket);
     }
 
     public String read() throws IOException {

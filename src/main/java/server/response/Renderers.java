@@ -1,7 +1,7 @@
 package server.response;
 
+import server.directory.DefaultDirectory;
 import server.directory.DirectoryIndex;
-import server.request.Handler;
 import server.request.Request;
 import server.response.stringcomponents.HTTPMethods;
 import server.response.stringcomponents.HeaderFields;
@@ -13,12 +13,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-public class Methods {
-    private Methods() {
+public class Renderers {
+    private Renderers() {
     }
 
     public static Response renderFile(Request request, String path) throws IOException {
-        Path filePath = Paths.get(path);
+        Path filePath;
+
+        filePath = getPath(path);
 
         byte[] fileContents = Files.readAllBytes(filePath);
 
@@ -26,6 +28,12 @@ public class Methods {
         return new Response.Builder(response)
             .withHeader(HeaderFields.CONTENT_TYPE, HeaderHelpers.contentType(new File(path)))
             .build();
+    }
+
+    private static Path getPath(String path) {
+        if (path.contains(DefaultDirectory.PATH))
+            return Paths.get(path);
+        return Paths.get(DefaultDirectory.PATH + path);
     }
 
     public static Response renderDirectory(Request request, String path) {
@@ -65,12 +73,5 @@ public class Methods {
     public static Response redirectTo(Request request, String path) {
         String host = request.headers().get(HeaderFields.HOST);
         return Types.movedPermanently(host, path);
-    }
-
-    public static Response fromRoute(Request request, Map<String, Handler> route) {
-        Response response = route.get(request.method()).dispatch(request);
-        return new Response.Builder(response)
-            .withHeader(HeaderFields.ALLOWED_METHODS, HeaderHelpers.allowedMethods(route))
-            .build();
     }
 }

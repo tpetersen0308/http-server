@@ -1,5 +1,6 @@
 package server.response;
 
+import org.junit.Before;
 import server.directory.DefaultDirectory;
 import org.junit.Test;
 import server.request.Request;
@@ -15,11 +16,18 @@ import java.util.Map;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class MethodsTest {
+public class RenderersTest {
+    String directoryPath = "./src/test/java/stubs/app/public_stub";
+
+    @Before
+    public void setupDirectory() {
+        DefaultDirectory.setPath(directoryPath);
+    }
+
     @Test
     public void shouldBuildABasicResponse() {
         Request request = new Request("HEAD", "/test-route", new HashMap<>(), "");
-        Response response = Methods.render(request, "test body".getBytes());
+        Response response = Renderers.render(request, "test body".getBytes());
 
         assertEquals("200 OK", response.status());
         assertEquals("9", response.headers().get("Content-Length"));
@@ -29,28 +37,19 @@ public class MethodsTest {
     @Test
     public void shouldBuildAResponseWithBody() {
         Request request = new Request("GET", "/test-route", new HashMap<>(), "");
-        Response response = Methods.render(request, "test body".getBytes());
+        Response response = Renderers.render(request, "test body".getBytes());
 
         assertEquals("200 OK", response.status());
         assertEquals("9", response.headers().get("Content-Length"));
         assertArrayEquals("test body".getBytes(), response.body());
     }
 
-    @Test
-    public void shouldBuildAResponseGivenARoute() {
-        Request request = new Request("GET", "/test-route", new HashMap<>(), "");
-        Response response = Methods.fromRoute(request, RoutesStub.ROUTES.get("/test-route"));
-
-        assertEquals("200 OK", response.status());
-        assertEquals("9", response.headers().get("Content-Length"));
-        assertArrayEquals("test body".getBytes(), response.body());
-    }
     @Test
     public void shouldBuildA301MovedPermanentlyResponse() {
         Map<String, String> headers = new HashMap<>();
         headers.put("Host", "127.0.0.1:5000");
         Request request = new Request("GET", "/test-route", headers, "");
-        Response response = Methods.redirectTo(request, "/new-path");
+        Response response = Renderers.redirectTo(request, "/new-path");
 
         assertEquals("301 Moved Permanently", response.status());
         assertEquals("http://127.0.0.1:5000/new-path", response.headers().get("Location"));
@@ -60,7 +59,7 @@ public class MethodsTest {
     public void shouldBuildAResponseWithCustomHeaders() {
         Map<String, String> customHeaders = new HashMap<String, String>() {{ put("custom", "header");}};
         Request request = new Request("GET", "/test-route", new HashMap<>(), "");
-        Response response = Methods.render(request, "".getBytes(), customHeaders);
+        Response response = Renderers.render(request, "".getBytes(), customHeaders);
 
         assertEquals("header", response.headers().get("custom"));
     }
@@ -68,8 +67,6 @@ public class MethodsTest {
     @Test
     public void shouldBuildAResponseWithDirectoryIndex() {
         Request request = new Request("GET", "/", new HashMap<>(), "");
-        String directoryPath = "./src/test/java/stubs/app/public_stub";
-        DefaultDirectory.setPath(directoryPath);
         String path = new File(directoryPath).getAbsolutePath();
         String expectedBody = "<h1>Index</h1>" +
                 "<h3>public_stub</h3>" +
@@ -82,7 +79,7 @@ public class MethodsTest {
                 "<li><a href='/so_rich.rtf'>so_rich.rtf</a></li>" +
                 "</ul>";
 
-        Response response = Methods.renderDirectory(request, path);
+        Response response = Renderers.renderDirectory(request, path);
 
         assertArrayEquals(expectedBody.getBytes(), response.body());
         assertEquals("text/html; charset=utf-8", response.headers().get("Content-Type"));
@@ -91,8 +88,7 @@ public class MethodsTest {
     @Test
     public void shouldBuildAResponseWithTextFileContents() throws IOException {
         Request request = new Request("GET", "/other_stuff/orange/youglad/i_didnt.txt", new HashMap<>(), "");
-        String directoryPath = "./src/test/java/stubs/app/public_stub";
-        Response response = Methods.renderFile(request, directoryPath + request.path());
+        Response response = Renderers.renderFile(request, request.path());
 
         assertArrayEquals("say banana?".getBytes(), response.body());
         assertEquals("text/plain; charset=utf-8", response.headers().get("Content-Type"));
@@ -101,8 +97,7 @@ public class MethodsTest {
     @Test
     public void shouldBuildAResponseWithHTMLFileContents() throws IOException {
         Request request = new Request("GET", "/hello_world.html", new HashMap<>(), "");
-        String directoryPath = "./src/test/java/stubs/app/public_stub";
-        Response response = Methods.renderFile(request, directoryPath + request.path());
+        Response response = Renderers.renderFile(request, request.path());
 
         assertArrayEquals("<h1>Hello, World!</h1>".getBytes(), response.body());
         assertEquals("text/html; charset=utf-8", response.headers().get("Content-Type"));
@@ -111,8 +106,7 @@ public class MethodsTest {
     @Test
     public void shouldBuildAResponseWithJSONFileContents() throws IOException {
         Request request = new Request("GET", "/more_stuff/bird.json", new HashMap<>(), "");
-        String directoryPath = "./src/test/java/stubs/app/public_stub";
-        Response response = Methods.renderFile(request, directoryPath + request.path());
+        Response response = Renderers.renderFile(request, request.path());
         String expectedJSON = "{\n" +
                 "  \"name\": \"Cedar Waxwing\",\n" +
                 "  \"scientific name\": \"Bombycilla Cedrorum\"\n" +
@@ -125,8 +119,7 @@ public class MethodsTest {
     @Test
     public void shouldBuildAResponseWithImageFileContents() throws IOException {
         Request request = new Request("GET", "/more_stuff/damn_good_coffee.jpg", new HashMap<>(), "");
-        String directoryPath = "./src/test/java/stubs/app/public_stub";
-        Response response = Methods.renderFile(request, directoryPath + request.path());
+        Response response = Renderers.renderFile(request, request.path());
         byte[] expected = Files.readAllBytes(Paths.get(directoryPath + request.path()));
 
         assertArrayEquals(expected, response.body());
@@ -136,8 +129,7 @@ public class MethodsTest {
     @Test
     public void shouldBuildAPlainTextResponseByDefault() throws IOException {
         Request request = new Request("GET", "/so_rich.rtf", new HashMap<>(), "");
-        String directoryPath = "./src/test/java/stubs/app/public_stub";
-        Response response = Methods.renderFile(request, directoryPath + request.path());
+        Response response = Renderers.renderFile(request, request.path());
         String expectedBody =  "{\\rtf1\\ansi{\\fonttbl\\f0\\fswiss Helvetica;}\\f0\\pardThis is some {\\b bold} text.\\par}";
 
         assertArrayEquals(expectedBody.getBytes(), response.body());

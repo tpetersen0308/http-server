@@ -1,5 +1,6 @@
 package server.response;
 
+import server.response.stringcomponents.ContentTypes;
 import server.response.stringcomponents.HeaderFields;
 import server.response.stringcomponents.Status;
 
@@ -8,6 +9,7 @@ public class Types {
         return new Response.Builder()
             .withStatus(Status.OK)
             .withHeader(HeaderFields.CONTENT_LENGTH, contentLength.toString())
+            .withHeader(HeaderFields.CONTENT_TYPE, ContentTypes.HEADER_VALUES.get(""))
             .build();
     }
 
