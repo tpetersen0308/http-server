@@ -6,11 +6,11 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 import server.Client;
-import server.request.Request;
-import server.request.RequestParser;
 import stubs.server.SocketStub;
 
-public class RequestParserTest {
+import java.io.IOException;
+
+public class ParserTest {
     String request;
     String requestLine;
     String requestBody;
@@ -33,25 +33,25 @@ public class RequestParserTest {
     }
 
     @Test
-    public void shouldParseRequestMethod() {
-        RequestParser requestParser = new RequestParser(client);
-        Request parsedRequest = requestParser.parse();
+    public void shouldParseRequestMethod() throws IOException {
+        Parser parser = new Parser();
+        Request parsedRequest = parser.parse(client);
 
         assertEquals("GET", parsedRequest.method());
     }
 
     @Test
-    public void shouldParseRequestPath() {
-        RequestParser requestParser = new RequestParser(client);
-        Request parsedRequest = requestParser.parse();
+    public void shouldParseRequestPath() throws IOException{
+        Parser parser = new Parser();
+        Request parsedRequest = parser.parse(client);
 
         assertEquals("/redirect", parsedRequest.path());
     }
 
     @Test
-    public void shouldParseRequestHeaders() {
-        RequestParser requestParser = new RequestParser(client);
-        Request parsedRequest = requestParser.parse();
+    public void shouldParseRequestHeaders() throws IOException{
+        Parser parser = new Parser();
+        Request parsedRequest = parser.parse(client);
 
         assertEquals("Ruby", parsedRequest.headers().get("User-Agent"));
         assertEquals("close", parsedRequest.headers().get("Connection"));
@@ -60,9 +60,9 @@ public class RequestParserTest {
     }
 
     @Test
-    public void shouldParseRequestBody() {
-        RequestParser requestParser = new RequestParser(client);
-        Request parsedRequest = requestParser.parse();
+    public void shouldParseRequestBody() throws IOException {
+        Parser parser = new Parser();
+        Request parsedRequest = parser.parse(client);
 
         assertEquals(requestBody, parsedRequest.body());
     }

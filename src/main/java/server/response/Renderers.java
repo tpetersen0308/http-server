@@ -1,11 +1,10 @@
 package server.response;
 
+import server.directory.DefaultDirectory;
 import server.directory.DirectoryIndex;
-import server.RequestHandler;
 import server.request.Request;
 import server.response.stringcomponents.HTTPMethods;
 import server.response.stringcomponents.HeaderFields;
-import server.response.stringcomponents.WhiteSpace;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,24 +13,27 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-public class ResponseMethods {
-    private ResponseMethods() {
+public class Renderers {
+    private Renderers() {
     }
 
-    public static Response renderFile(Request request, String path) {
-        byte[] fileContents = WhiteSpace.EMPTY_BODY;
-        Path filePath = Paths.get(path);
+    public static Response renderFile(Request request, String path) throws IOException {
+        Path filePath;
 
-        try {
-            fileContents = Files.readAllBytes(filePath);
-        } catch (IOException err) {
-            System.out.println(err);
-        }
+        filePath = getPath(path);
+
+        byte[] fileContents = Files.readAllBytes(filePath);
 
         Response response = render(request, fileContents);
         return new Response.Builder(response)
-            .withHeader(HeaderFields.CONTENT_TYPE, ResponseHelpers.contentType(new File(path)))
+            .withHeader(HeaderFields.CONTENT_TYPE, HeaderHelpers.contentType(new File(path)))
             .build();
+    }
+
+    private static Path getPath(String path) {
+        if (path.contains(DefaultDirectory.path()))
+            return Paths.get(path);
+        return Paths.get(DefaultDirectory.path() + path);
     }
 
     public static Response renderDirectory(Request request, String path) {
@@ -39,15 +41,15 @@ public class ResponseMethods {
         Response response = render(request, directoryHTML.getBytes());
 
         return new Response.Builder(response)
-            .withHeader(HeaderFields.CONTENT_TYPE, ResponseHelpers.contentType(new File(".html")))
+            .withHeader(HeaderFields.CONTENT_TYPE, HeaderHelpers.contentType(new File(".html")))
             .build();
     }
 
     public static Response render(Request request, byte[] body, Map<String, String> headers) {
         Response.Builder response = new Response.Builder(render(request, body));
 
-        for(Map.Entry<String, String> header : headers.entrySet()) {
-           response.withHeader(header.getKey(), header.getValue());
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            response.withHeader(header.getKey(), header.getValue());
         }
 
         return response.build();
@@ -58,7 +60,7 @@ public class ResponseMethods {
     }
 
     public static Response render(Request request, byte[] body) {
-        Response response = ResponseTypes.ok(body.length);
+        Response response = Types.ok(body.length);
 
         if (request.method().equals(HTTPMethods.HEAD))
             return response;
@@ -70,13 +72,6 @@ public class ResponseMethods {
 
     public static Response redirectTo(Request request, String path) {
         String host = request.headers().get(HeaderFields.HOST);
-        return ResponseTypes.movedPermanently(host, path);
-    }
-
-    public static Response fromRoute(Request request, Map<String, RequestHandler> route) {
-        Response response = route.get(request.method()).dispatch(request);
-        return new Response.Builder(response)
-            .withHeader(HeaderFields.ALLOWED_METHODS, ResponseHelpers.allowedMethods(route))
-            .build();
+        return Types.movedPermanently(host, path);
     }
 }
