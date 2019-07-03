@@ -16,7 +16,7 @@ public class ConnectionHandlerTest {
     public void shouldRespondToProperlyFormattedRequests() {
         SocketStub socket = new SocketStub("GET /test-route HTTP/1.1\r\n\r\n");
         Client client = new Client(socket);
-        Parser parser = new Parser(client);
+        Parser parser = new Parser();
         Selector selector = new Selector(RoutesStub.ROUTES);
         Formatter formatter = new Formatter();
         ConnectionHandler connectionHandler = new ConnectionHandler(client, parser, selector, formatter);
@@ -32,7 +32,7 @@ public class ConnectionHandlerTest {
     public void shouldRespondWhenInternalErrorIsThrown() {
         SocketStub socket = new SocketStub("GET /test-route HTTP/1.1\r\n\r\n");
         Client client = new ClientStub(socket);
-        Parser parser = new Parser(client);
+        Parser parser = new Parser();
         Selector selector = new Selector(RoutesStub.ROUTES);
         Formatter formatter = new Formatter();
         ConnectionHandler connectionHandler = new ConnectionHandler(client, parser, selector, formatter);
@@ -48,7 +48,7 @@ public class ConnectionHandlerTest {
     public void shouldRespondToBadRequest() {
         SocketStub socket = new SocketStub("");
         Client client = new Client(socket);
-        Parser parser = new Parser(client);
+        Parser parser = new Parser();
         Selector selector = new Selector(RoutesStub.ROUTES);
         Formatter formatter = new Formatter();
         ConnectionHandler connectionHandler = new ConnectionHandler(client, parser, selector, formatter);

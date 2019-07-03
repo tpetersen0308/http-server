@@ -20,14 +20,14 @@ public class Server {
     }
 
     public void start(Map<String, Map<String, Handler>> routes) {
+        Parser parser = new Parser();
+        Selector selector = new Selector(routes);
+        Formatter formatter = new Formatter();
         try {
             ServerSocket socket = new ServerSocket(port);
             while (true) {
                 Socket clientSocket = socket.accept();
                 Client client = new Client(clientSocket);
-                Parser parser = new Parser(client);
-                Selector selector = new Selector(routes);
-                Formatter formatter = new Formatter();
                 ConnectionHandler connectionHandler = new ConnectionHandler(client, parser, selector, formatter);
                 (new Thread(connectionHandler)).start();
             }

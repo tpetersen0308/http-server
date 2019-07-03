@@ -6,7 +6,7 @@ import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 
-public class DefaultDirectoryIndexTest {
+public class DirectoryIndexTest {
     @Test
     public void shouldDynamicallyCreateHTMLForDirectoryIndex() {
         String directory = "./src/test/java/stubs/app/public_stub";
@@ -38,7 +38,7 @@ public class DefaultDirectoryIndexTest {
                         "<li><a href='/other_stuff/orange/youglad'>youglad</a></li>" +
                     "</ul>";
 
-        DirectoryIndex directoryIndex = new DirectoryIndex(DefaultDirectory.PATH + "/other_stuff/orange");
+        DirectoryIndex directoryIndex = new DirectoryIndex(DefaultDirectory.path() + "/other_stuff/orange");
 
         assertEquals(expectedHTML, directoryIndex.toHTML());
     }

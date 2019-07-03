@@ -1,5 +1,6 @@
 package server;
 
+import resources.Logger;
 import server.request.Request;
 import server.request.Parser;
 import server.response.Formatter;
@@ -13,6 +14,7 @@ public class ConnectionHandler implements Runnable {
     private Parser parser;
     private Selector selector;
     private Formatter formatter;
+    private Logger logger = new Logger();
 
     public ConnectionHandler(Client client, Parser parser, Selector selector, Formatter formatter) {
         this.client = client;
@@ -25,9 +27,10 @@ public class ConnectionHandler implements Runnable {
         Request request;
         Response response;
         try {
-            request = parser.parse();
+            request = parser.parse(client);
             response = selector.selectResponse(request);
         } catch (IOException err) {
+            logger.log(err);
             response = selector.selectResponse(err);
         }
         sendResponse(response);

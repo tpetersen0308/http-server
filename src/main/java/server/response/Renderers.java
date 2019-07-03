@@ -31,9 +31,9 @@ public class Renderers {
     }
 
     private static Path getPath(String path) {
-        if (path.contains(DefaultDirectory.PATH))
+        if (path.contains(DefaultDirectory.path()))
             return Paths.get(path);
-        return Paths.get(DefaultDirectory.PATH + path);
+        return Paths.get(DefaultDirectory.path() + path);
     }
 
     public static Response renderDirectory(Request request, String path) {

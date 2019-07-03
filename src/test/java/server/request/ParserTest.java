@@ -34,24 +34,24 @@ public class ParserTest {
 
     @Test
     public void shouldParseRequestMethod() throws IOException {
-        Parser parser = new Parser(client);
-        Request parsedRequest = parser.parse();
+        Parser parser = new Parser();
+        Request parsedRequest = parser.parse(client);
 
         assertEquals("GET", parsedRequest.method());
     }
 
     @Test
     public void shouldParseRequestPath() throws IOException{
-        Parser parser = new Parser(client);
-        Request parsedRequest = parser.parse();
+        Parser parser = new Parser();
+        Request parsedRequest = parser.parse(client);
 
         assertEquals("/redirect", parsedRequest.path());
     }
 
     @Test
     public void shouldParseRequestHeaders() throws IOException{
-        Parser parser = new Parser(client);
-        Request parsedRequest = parser.parse();
+        Parser parser = new Parser();
+        Request parsedRequest = parser.parse(client);
 
         assertEquals("Ruby", parsedRequest.headers().get("User-Agent"));
         assertEquals("close", parsedRequest.headers().get("Connection"));
@@ -61,8 +61,8 @@ public class ParserTest {
 
     @Test
     public void shouldParseRequestBody() throws IOException {
-        Parser parser = new Parser(client);
-        Request parsedRequest = parser.parse();
+        Parser parser = new Parser();
+        Request parsedRequest = parser.parse(client);
 
         assertEquals(requestBody, parsedRequest.body());
     }

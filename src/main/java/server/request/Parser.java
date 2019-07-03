@@ -9,26 +9,24 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class Parser {
-    Client client;
-
-    public Parser(Client client) {
-        this.client = client;
+    public Parser() {
     }
 
-    public Request parse() throws IOException {
-        String requestLine = parseRequestLine();
+    public Request parse(Client client) throws IOException {
+        String requestLine = parseRequestLine(client);
         String requestMethod = parseRequestMethod(requestLine);
         String requestPath = parseRequestPath(requestLine);
 
-        Map<String, String> requestHeaders = parseRequestHeaders();
-        String requestBody = parseRequestBody(requestHeaders);
+        Map<String, String> requestHeaders = parseRequestHeaders(client);
+        String requestBody = parseRequestBody(client, requestHeaders);
 
         return new Request(requestMethod, requestPath, requestHeaders, requestBody);
     }
 
-    private String parseRequestLine() throws IOException {
+    private String parseRequestLine(Client client) throws IOException {
+        String emptyRequestLine = "";
         String requestLine = client.read();
-        return requestLine == null ? "" : requestLine;
+        return requestLine == null ? emptyRequestLine : requestLine;
     }
 
     private String parseRequestMethod(String requestLine) {
@@ -36,10 +34,11 @@ public class Parser {
     }
 
     private String parseRequestPath(String requestLine) {
-        return requestLine.isEmpty() ? "" : requestLine.split(WhiteSpace.SP)[1].trim();
+        String emptyPath = "";
+        return requestLine.isEmpty() ? emptyPath : requestLine.split(WhiteSpace.SP)[1].trim();
     }
 
-    private Map<String, String> parseRequestHeaders() throws IOException {
+    private Map<String, String> parseRequestHeaders(Client client) throws IOException {
         Map<String, String> requestHeaders = new HashMap<>();
         String header = client.read();
 
@@ -52,7 +51,7 @@ public class Parser {
         return requestHeaders;
     }
 
-    private String parseRequestBody(Map requestHeaders) throws IOException {
+    private String parseRequestBody(Client client, Map requestHeaders) throws IOException {
         int contentLength = parseRequestBodyContentLength(requestHeaders);
 
         return client.read(contentLength);
